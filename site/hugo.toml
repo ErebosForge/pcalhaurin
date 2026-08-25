@@ -1,0 +1,28 @@
+baseURL = "https://alhaurinpc.es/"
+title = "AlhaurinPC"
+defaultContentLanguage = "es"
+defaultContentLanguageInSubdir = false
+
+[languages]
+  [languages.es]
+    languageName = "Español"
+    weight = 1
+    title = "Reparación de Ordenadores en Alhaurín de la Torre | AlhaurinPC"
+  [languages.en]
+    languageName = "English"
+    weight = 2
+    title = "PC Repair in Alhaurín de la Torre | AlhaurinPC"
+    languageCode = "en"
+
+[params]
+  phone = "+34XXXXXXXXX"
+  whatsapp = "34XXXXXXXXX"
+
+[outputs]
+  home = ["HTML", "RSS"]
+
+[sitemap]
+  changefreq = "monthly"
+  priority = 0.5
+
+enableRobotsTXT = true
