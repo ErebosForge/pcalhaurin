@@ -1,28 +1,29 @@
-baseURL = "https://alhaurinpc.es/"
-title = "AlhaurinPC"
+baseURL = "https://pcalhaurin.es/"
+title = "PCAlhaurín"
 defaultContentLanguage = "es"
 defaultContentLanguageInSubdir = false
 
 [languages]
   [languages.es]
-    languageName = "Español"
+    label = "Español"
     weight = 1
-    title = "Reparación de Ordenadores en Alhaurín de la Torre | AlhaurinPC"
+    title = "Reparación de Ordenadores en Alhaurín de la Torre | PCAlhaurín"
   [languages.en]
-    languageName = "English"
+    label = "English"
     weight = 2
-    title = "PC Repair in Alhaurín de la Torre | AlhaurinPC"
-    languageCode = "en"
+    title = "PC Repair in Alhaurín de la Torre | PCAlhaurín"
+    locale = "en-GB"
 
 [params]
-  phone = "+34XXXXXXXXX"
-  whatsapp = "34XXXXXXXXX"
+  phone = "+34 614 47 99 22"
+  whatsapp = "34614479922"
 
 [outputs]
-  home = ["HTML", "RSS"]
+  home = ["HTML"]
 
 [sitemap]
   changefreq = "monthly"
   priority = 0.5
 
 enableRobotsTXT = true
+disableKinds = ["taxonomy", "term"]

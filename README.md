@@ -4,12 +4,27 @@ Static multilingual website (ES/EN) advertising local PC repair services in Alha
 
 Domain: `alhaurinpc.es` (pending registration)
 
+## Prerequisites
+
+```bash
+# Windows (winget)
+winget install Hugo.Hugo.Extended
+
+# Ubuntu/Debian
+sudo apt install hugo
+
+# Arch
+sudo pacman -S hugo
+
+# Or download binary directly from:
+# https://github.com/gohugoio/hugo/releases (choose "extended" version)
+```
+
+Verify installation: `hugo version` (requires v0.158.0+ for current config)
+
 ## Quick Start
 
 ```bash
-# Install Hugo (https://gohugo.io/installation/)
-# Windows: winget install Hugo.Hugo.Extended
-
 # Run local dev server with live reload
 cd site
 hugo server
