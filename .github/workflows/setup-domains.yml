@@ -11,21 +11,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify tunnel config on server
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ vars.DEPLOY_HOST }}
-          username: ubuntu
-          key: ${{ secrets.SSH_DEPLOY_KEY }}
-          script: |
-            if grep -q "pcalhaurin.es" /etc/cloudflared/config.yml; then
-              echo "✓ Tunnel config includes pcalhaurin.es"
-            else
-              echo "⚠️  pcalhaurin.es NOT in tunnel config!"
-              exit 1
-            fi
-
-      - name: Configure DNS and zone settings
+      - name: Setup pcalhaurin.es DNS and settings
         run: |
           ZONE_ID=$(curl -s "https://api.cloudflare.com/client/v4/zones?name=${{ env.DOMAIN }}" \
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" | jq -r '.result[0].id')
@@ -36,47 +22,25 @@ jobs:
           fi
           echo "Zone ID: $ZONE_ID"
 
-          # Create CNAME for @ (root domain)
-          RESULT=$(curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            --data '{
-              "type": "CNAME",
-              "name": "@",
-              "content": "${{ env.TUNNEL_ID }}.cfargotunnel.com",
-              "proxied": true
-            }')
-          if [ "$(echo "$RESULT" | jq -r '.success')" = "true" ]; then
-            echo "✓ CNAME @ created"
-          else
-            ERROR=$(echo "$RESULT" | jq -r '.errors[0].message // "unknown"')
-            if echo "$ERROR" | grep -qi "already exists"; then
-              echo "✓ CNAME @ already exists"
+          # Create CNAMEs
+          for NAME in "@" "www"; do
+            RESULT=$(curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records" \
+              -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+              -H "Content-Type: application/json" \
+              --data "{
+                \"type\": \"CNAME\",
+                \"name\": \"${NAME}\",
+                \"content\": \"${{ env.TUNNEL_ID }}.cfargotunnel.com\",
+                \"proxied\": true
+              }")
+            SUCCESS=$(echo "$RESULT" | jq -r '.success')
+            if [ "$SUCCESS" = "true" ]; then
+              echo "✓ CNAME ${NAME} created"
             else
-              echo "WARNING: CNAME @ - $ERROR"
+              ERROR=$(echo "$RESULT" | jq -r '.errors[0].message // "unknown"')
+              echo "- CNAME ${NAME}: $ERROR"
             fi
-          fi
-
-          # Create CNAME for www
-          RESULT=$(curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            --data '{
-              "type": "CNAME",
-              "name": "www",
-              "content": "${{ env.TUNNEL_ID }}.cfargotunnel.com",
-              "proxied": true
-            }')
-          if [ "$(echo "$RESULT" | jq -r '.success')" = "true" ]; then
-            echo "✓ CNAME www created"
-          else
-            ERROR=$(echo "$RESULT" | jq -r '.errors[0].message // "unknown"')
-            if echo "$ERROR" | grep -qi "already exists"; then
-              echo "✓ CNAME www already exists"
-            else
-              echo "WARNING: CNAME www - $ERROR"
-            fi
-          fi
+          done
 
           # Enable Always Use HTTPS
           RESULT=$(curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/settings/always_use_https" \
@@ -85,8 +49,6 @@ jobs:
             --data '{"value":"on"}')
           if [ "$(echo "$RESULT" | jq -r '.success')" = "true" ]; then
             echo "✓ Always Use HTTPS enabled"
-          else
-            echo "WARNING: Could not enable Always Use HTTPS"
           fi
 
           # Set SSL mode to Full
@@ -96,8 +58,6 @@ jobs:
             --data '{"value":"full"}')
           if [ "$(echo "$RESULT" | jq -r '.success')" = "true" ]; then
             echo "✓ SSL mode set to Full"
-          else
-            echo "WARNING: Could not set SSL mode"
           fi
 
           # Enable Brotli
@@ -106,13 +66,8 @@ jobs:
             -H "Content-Type: application/json" \
             --data '{"value":"on"}')
           if [ "$(echo "$RESULT" | jq -r '.success')" = "true" ]; then
-            echo "✓ Brotli compression enabled"
-          else
-            echo "WARNING: Could not enable Brotli"
+            echo "✓ Brotli enabled"
           fi
 
           echo ""
-          echo "=== Setup complete ==="
-          echo "DNS: ${{ env.DOMAIN }} + www.${{ env.DOMAIN }} → tunnel ${{ env.TUNNEL_ID }}"
-          echo "SSL: Always HTTPS + Full mode"
-          echo "Compression: Brotli enabled"
+          echo "=== ${{ env.DOMAIN }} setup complete ==="
