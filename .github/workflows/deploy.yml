@@ -1,14 +1,16 @@
-name: Deploy
+name: CI/CD
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
-  DOMAIN: pcalhaurin.es
-  DEPLOY_PATH: /opt/pcalhaurin
-  HUGO_VERSION: '0.165.0'
+  DEPLOY_PATH: /data/deployments/pcalhaurin
 
 jobs:
   deploy:
@@ -16,37 +18,48 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Hugo
-        run: |
-          wget -q "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
-          tar -xzf "hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
-          sudo mv hugo /usr/local/bin/
-
-      - name: Build site
-        working-directory: site
-        run: hugo --minify
-
-      - name: Deploy to server
-        uses: easingthemes/ssh-deploy@v5
-        with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-          REMOTE_HOST: ${{ vars.DEPLOY_HOST }}
-          REMOTE_USER: ubuntu
-          SOURCE: "."
-          TARGET: "${{ env.DEPLOY_PATH }}/"
-          ARGS: "-avz --delete --exclude='.git'"
-
-      - name: Rebuild and restart container
+      - name: Deploy
         uses: appleboy/ssh-action@v1
+        env:
+          GH_TOKEN: ${{ secrets.CICD_ACCESS_TOKEN }}
+          GIT_REF: ${{ github.sha }}
         with:
           host: ${{ vars.DEPLOY_HOST }}
           username: ubuntu
           key: ${{ secrets.SSH_DEPLOY_KEY }}
+          envs: GH_TOKEN,GIT_REF
           script: |
-            cd ${{ env.DEPLOY_PATH }}
-            docker compose up -d --build --force-recreate
-            echo "--- Container status ---"
-            docker compose ps
-            echo "--- Health check ---"
+            set -e
+            BASE="${{ env.DEPLOY_PATH }}"
+            RELEASE="$BASE/releases/$(date +%Y%m%d_%H%M%S)"
+            CURRENT="$BASE/current"
+
+            # Clone fresh release at the exact commit
+            mkdir -p "$BASE/releases"
+            git clone https://x-access-token:${GH_TOKEN}@github.com/ErebosForge/pcalhaurin.git "$RELEASE"
+            cd "$RELEASE"
+            git checkout "$GIT_REF"
+
+            # Build Hugo site
+            hugo --minify --source site
+
+            # Stop old if symlink exists
+            if [ -L "$CURRENT" ]; then
+              OLD_RELEASE=$(readlink -f "$CURRENT")
+              cd "$OLD_RELEASE"
+              docker compose down || true
+            fi
+
+            # Swap symlink
+            ln -sfn "$RELEASE" "$CURRENT"
+
+            # Start new
+            cd "$RELEASE"
+            docker compose up -d --build
+
+            # Health check
             sleep 2
             curl -sf http://localhost:8080 > /dev/null && echo "OK: site responding" || echo "FAIL: site not responding"
+
+            # Cleanup old releases (keep last 3)
+            ls -dt $BASE/releases/*/ 2>/dev/null | tail -n +4 | xargs rm -rf 2>/dev/null || true
