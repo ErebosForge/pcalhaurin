@@ -8,7 +8,7 @@
     <div class="nav-right">
       <span class="lang-switch" aria-label="{{ if eq .Language.Lang "es" }}Cambiar idioma{{ else }}Change language{{ end }}">
         {{ range .Translations }}
-        <a href="{{ .Permalink }}" hreflang="{{ .Language.Lang }}">{{ .Language.Label }}</a>
+        <a href="{{ .Permalink }}" hreflang="{{ .Language.Lang }}">{{ if eq .Language.Lang "es" }}Español{{ else }}English{{ end }}</a>
         {{ end }}
       </span>
       <a href="https://wa.me/{{ site.Params.whatsapp }}?text={{ if eq .Language.Lang "es" }}Hola,%20necesito%20presupuesto{{ else }}Hi,%20I%20need%20a%20quote{{ end }}" class="nav-phone" target="_blank" rel="noopener" aria-label="WhatsApp">

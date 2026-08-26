@@ -5,14 +5,14 @@ defaultContentLanguageInSubdir = false
 
 [languages]
   [languages.es]
-    label = "Español"
+    languageName = "Español"
     weight = 1
     title = "Reparación de Ordenadores en Alhaurín de la Torre | PCAlhaurín"
   [languages.en]
-    label = "English"
+    languageName = "English"
     weight = 2
     title = "PC Repair in Alhaurín de la Torre | PCAlhaurín"
-    locale = "en-GB"
+    languageCode = "en-GB"
 
 [params]
   phone = "+34 614 47 99 22"

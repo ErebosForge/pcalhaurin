@@ -5,7 +5,7 @@
     <div class="nav-right">
       <span class="lang-switch" aria-label="{{ if eq .Language.Lang "es" }}Cambiar idioma{{ else }}Change language{{ end }}">
         {{ range .Translations }}
-        <a href="{{ .Permalink }}" hreflang="{{ .Language.Lang }}">{{ .Language.Label }}</a>
+        <a href="{{ .Permalink }}" hreflang="{{ .Language.Lang }}">{{ if eq .Language.Lang "es" }}Español{{ else }}English{{ end }}</a>
         {{ end }}
       </span>
     </div>
