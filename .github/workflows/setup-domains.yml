@@ -1,0 +1,89 @@
+name: Setup Domains
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure tunnel and DNS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ vars.DEPLOY_HOST }}
+          username: ubuntu
+          key: ${{ secrets.SSH_DEPLOY_KEY }}
+          script: |
+            # Add DNS routes for pcalhaurin.es (idempotent - skips if exists)
+            cloudflared tunnel route dns erebosforge pcalhaurin.es || true
+            cloudflared tunnel route dns erebosforge www.pcalhaurin.es || true
+
+            echo "✓ DNS routes added (or already exist)"
+
+            # Verify tunnel config includes pcalhaurin
+            if grep -q "pcalhaurin.es" /etc/cloudflared/config.yml; then
+              echo "✓ Tunnel config already includes pcalhaurin.es"
+            else
+              echo "⚠️  pcalhaurin.es NOT in tunnel config. Add manually:"
+              echo "    - hostname: pcalhaurin.es"
+              echo "      service: http://localhost:8080"
+              echo "    - hostname: www.pcalhaurin.es"
+              echo "      service: http://localhost:8080"
+            fi
+
+      - name: Configure Cloudflare zone settings
+        run: |
+          ZONE_ID=$(curl -s "https://api.cloudflare.com/client/v4/zones?name=pcalhaurin.es" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" | jq -r '.result[0].id')
+
+          if [ "$ZONE_ID" = "null" ] || [ -z "$ZONE_ID" ]; then
+            echo "ERROR: Could not resolve Zone ID for pcalhaurin.es"
+            echo "Make sure the domain is added to Cloudflare and nameservers are active."
+            exit 1
+          fi
+
+          echo "Zone ID: $ZONE_ID"
+
+          # Enable Always Use HTTPS
+          RESULT=$(curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/settings/always_use_https" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"value":"on"}')
+
+          if [ "$(echo "$RESULT" | jq -r '.success')" != "true" ]; then
+            echo "ERROR: Failed to enable Always Use HTTPS"
+            echo "$RESULT" | jq .
+            exit 1
+          fi
+          echo "✓ Always Use HTTPS enabled"
+
+          # Set SSL mode to Full (strict)
+          RESULT=$(curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/settings/ssl" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"value":"full"}')
+
+          if [ "$(echo "$RESULT" | jq -r '.success')" != "true" ]; then
+            echo "WARNING: Could not set SSL mode"
+            echo "$RESULT" | jq .
+          else
+            echo "✓ SSL mode set to Full"
+          fi
+
+          # Enable Brotli compression
+          RESULT=$(curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/settings/brotli" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"value":"on"}')
+
+          if [ "$(echo "$RESULT" | jq -r '.success')" != "true" ]; then
+            echo "WARNING: Could not enable Brotli"
+          else
+            echo "✓ Brotli compression enabled"
+          fi
+
+          echo ""
+          echo "=== Setup complete ==="
+          echo "DNS: pcalhaurin.es + www.pcalhaurin.es → tunnel"
+          echo "SSL: Always HTTPS + Full mode"
+          echo "Compression: Brotli enabled"
