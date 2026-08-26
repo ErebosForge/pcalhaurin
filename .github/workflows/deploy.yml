@@ -16,7 +16,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v4
+
       - name: Deploy
         uses: appleboy/ssh-action@v1
         env:
@@ -33,6 +34,9 @@ jobs:
             RELEASE="$BASE/releases/$(date +%Y%m%d_%H%M%S)"
             CURRENT="$BASE/current"
 
+            # Ensure proxy network exists (Traefik)
+            podman network exists proxy || podman network create proxy
+
             # Clone fresh release at the exact commit
             mkdir -p "$BASE/releases"
             git clone https://x-access-token:${GH_TOKEN}@github.com/ErebosForge/pcalhaurin.git "$RELEASE"
@@ -46,7 +50,7 @@ jobs:
             if [ -L "$CURRENT" ]; then
               OLD_RELEASE=$(readlink -f "$CURRENT")
               cd "$OLD_RELEASE"
-              docker compose down || true
+              podman-compose down || true
             fi
 
             # Swap symlink
@@ -54,11 +58,11 @@ jobs:
 
             # Start new
             cd "$RELEASE"
-            docker compose up -d --build
+            podman-compose up -d --build
 
-            # Health check
-            sleep 2
-            curl -sf http://localhost:8080 > /dev/null && echo "OK: site responding" || echo "FAIL: site not responding"
+            # Health check (via Traefik)
+            sleep 3
+            curl -sf -H "Host: pcalhaurin.es" http://127.0.0.1:80 > /dev/null && echo "OK: site responding via Traefik" || echo "FAIL: site not responding"
 
             # Cleanup old releases (keep last 3)
             ls -dt $BASE/releases/*/ 2>/dev/null | tail -n +4 | xargs rm -rf 2>/dev/null || true
