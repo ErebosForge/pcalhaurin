@@ -30,8 +30,8 @@ jobs:
         uses: easingthemes/ssh-deploy@v5
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
-          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
-          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          REMOTE_HOST: ${{ vars.DEPLOY_HOST }}
+          REMOTE_USER: ubuntu
           SOURCE: "."
           TARGET: "${{ env.DEPLOY_PATH }}/"
           ARGS: "-avz --delete --exclude='.git'"
@@ -39,8 +39,8 @@ jobs:
       - name: Rebuild and restart container
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
+          host: ${{ vars.DEPLOY_HOST }}
+          username: ubuntu
           key: ${{ secrets.SSH_DEPLOY_KEY }}
           script: |
             cd ${{ env.DEPLOY_PATH }}
