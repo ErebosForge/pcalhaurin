@@ -1,13 +1,15 @@
-# AlhaurinPC
+# PCAlhaurín
 
-Static multilingual website (ES/EN) advertising local PC repair services in Alhaurín de la Torre and surrounding areas. Built with Hugo, hosted on OCI alongside AcaMaster, served via Cloudflare Tunnel.
+Static multilingual website (ES/EN) for local PC repair services in Alhaurín de la Torre and surrounding areas. Built with Hugo, containerized with Docker (Caddy Alpine), deployed via GitHub Actions to OCI, served via Cloudflare Tunnel.
 
-Domain: `alhaurinpc.es` (pending registration)
+- **Domain**: pcalhaurin.es
+- **Brand**: PCAlhaurín
+- **Repo**: github.com/ErebosForge/pcalhaurin
 
 ## Prerequisites
 
 ```bash
-# Windows (winget)
+# Windows
 winget install Hugo.Hugo.Extended
 
 # Ubuntu/Debian
@@ -16,23 +18,24 @@ sudo apt install hugo
 # Arch
 sudo pacman -S hugo
 
-# Or download binary directly from:
-# https://github.com/gohugoio/hugo/releases (choose "extended" version)
+# Or download from https://github.com/gohugoio/hugo/releases (extended version)
+# Note: Hugo is only needed for local preview. Production builds run inside Docker.
 ```
 
-Verify installation: `hugo version` (requires v0.158.0+ for current config)
+Docker is required for production builds and local container testing.
 
 ## Quick Start
 
 ```bash
-# Run local dev server with live reload
+# Local preview with hot reload (requires Hugo installed)
 cd site
 hugo server
+# → http://localhost:1313
 
-# Open http://localhost:1313
-
-# Build static site (output in site/public/)
-hugo --minify
+# Local preview with Docker (no Hugo needed)
+cd site && hugo --minify && cd ..
+docker compose up -d --build
+# → http://127.0.0.1:8080
 ```
 
 ## Development
@@ -43,7 +46,9 @@ hugo --minify
 #   site/content/_index.en.md  — All English text
 
 # Edit layout/design:
-#   site/layouts/index.html    — Single page template
+#   site/layouts/index.html    — Main page template
+#   site/layouts/_default/baseof.html — HTML shell
+#   site/layouts/_default/legal.html  — Legal page template
 
 # Edit styles:
 #   site/static/css/style.css
@@ -54,34 +59,44 @@ cd site && hugo server
 
 ## Deploy
 
-```bash
-cd site && hugo --minify
-rsync -avz public/ user@server:/var/www/alhaurinpc/
-```
+Push to `main` triggers GitHub Actions:
+1. Clones repo on OCI server
+2. Docker multi-stage build: Hugo 0.165.0 builds site → Caddy serves result
+3. Container runs on port 8080 behind Traefik → Cloudflare Tunnel
 
-Production served by Caddy behind Cloudflare Tunnel on OCI instance.
+See `docs/deploy.md` for full setup instructions and secrets.
 
 ## Project Structure
 
 ```
-alhaurinpc/
-├── README.md              ← This file (not public)
-├── DEVLOG.md              ← Development log (not public)
-├── docs/                  ← Specs, prompts, research (not public)
-│   └── spec.md
-├── site/                  ← Hugo project root
-│   ├── hugo.toml          ← Config (languages, metadata, URLs)
+pcalhaurin/
+├── README.md                  ← This file (not public)
+├── DEVLOG.md                  ← Development log (not public)
+├── Dockerfile                 ← Multi-stage: Hugo build + Caddy serve
+├── Caddyfile                  ← Caddy config (caching, gzip, security headers)
+├── docker-compose.yml         ← Container config (port 8080)
+├── docs/                      ← Specs, research (not public)
+│   ├── spec.md                ← Site specification
+│   └── deploy.md              ← Deployment guide
+├── infra/
+│   └── setup-server.sh        ← One-time server setup script
+├── .github/workflows/
+│   ├── deploy.yml             ← CI/CD: clone → docker build → deploy
+│   └── setup-domains.yml      ← DNS setup via Cloudflare API
+├── site/                      ← Hugo project root
+│   ├── hugo.toml              ← Config (languages, metadata, URLs)
 │   ├── content/
-│   │   ├── _index.es.md   ← All Spanish text (YAML front matter)
-│   │   └── _index.en.md   ← All English text
+│   │   ├── _index.es.md       ← All Spanish text (YAML front matter)
+│   │   ├── _index.en.md       ← All English text
+│   │   ├── legal.es.md        ← Legal notice / privacy (ES)
+│   │   └── legal.en.md        ← Legal notice / privacy (EN)
 │   ├── layouts/
-│   │   ├── index.html     ← Main page template
+│   │   ├── index.html         ← Main page template
 │   │   └── _default/
-│   │       └── baseof.html
-│   ├── static/
-│   │   ├── css/style.css
-│   │   ├── img/
-│   │   └── favicon.ico
-│   └── public/            ← Build output (gitignored, this is what gets deployed)
+│   │       ├── baseof.html    ← HTML shell (metas, fonts, WA float)
+│   │       └── legal.html     ← Legal page layout
+│   └── static/
+│       ├── css/style.css      ← Design tokens + responsive styles
+│       └── img/               ← 6 optimized photos (gallery)
 └── .gitignore
 ```
