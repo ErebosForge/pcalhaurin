@@ -7,7 +7,7 @@ on:
 
 env:
   DOMAIN: pcalhaurin.es
-  DEPLOY_PATH: /var/www/pcalhaurin
+  DEPLOY_PATH: /opt/pcalhaurin
   HUGO_VERSION: '0.165.0'
 
 jobs:
@@ -32,18 +32,21 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.SERVER_HOST }}
           REMOTE_USER: ${{ secrets.SERVER_USER }}
-          SOURCE: "site/public/"
+          SOURCE: "."
           TARGET: "${{ env.DEPLOY_PATH }}/"
-          ARGS: "-avz --delete"
+          ARGS: "-avz --delete --exclude='.git'"
 
-      - name: Verify deployment
+      - name: Rebuild and restart container
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "--- Deployment verification ---"
-            ls -la ${{ env.DEPLOY_PATH }}/index.html
-            echo "Files deployed: $(find ${{ env.DEPLOY_PATH }} -type f | wc -l)"
-            echo "Total size: $(du -sh ${{ env.DEPLOY_PATH }} | cut -f1)"
+            cd ${{ env.DEPLOY_PATH }}
+            docker compose up -d --build --force-recreate
+            echo "--- Container status ---"
+            docker compose ps
+            echo "--- Health check ---"
+            sleep 2
+            curl -sf http://localhost:8080 > /dev/null && echo "OK: site responding" || echo "FAIL: site not responding"

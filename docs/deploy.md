@@ -4,81 +4,95 @@
 
 ```
 GitHub (push to main)
-  → GitHub Actions (hugo build + rsync)
-    → OCI Server (static files in /var/www/pcalhaurin)
-      → Caddy (serves files, caching headers, gzip)
-        → Cloudflare Tunnel (ingress, SSL, CDN)
-          → pcalhaurin.es (public)
+  → GitHub Actions
+    → hugo build (in runner)
+    → rsync full project to server
+    → docker compose up -d --build
+      → Container: Caddy Alpine serves static files on :8080
+        → Cloudflare Tunnel routes pcalhaurin.es → localhost:8080
+          → Cloudflare handles SSL + CDN
 ```
+
+## SSL
+
+Cloudflare handles all SSL termination. The container only serves HTTP on port 80 (mapped to host :8080). No certificates needed on the server.
 
 ## GitHub Secrets Required
 
-Add these in: GitHub repo → Settings → Secrets and variables → Actions
+Add in: GitHub repo → Settings → Secrets and variables → Actions
 
 | Secret | Value |
 |--------|-------|
-| `SSH_PRIVATE_KEY` | Contents of the OCI SSH private key (same one used for AcaMaster) |
-| `SERVER_HOST` | OCI instance public IP or Cloudflare Tunnel address |
-| `SERVER_USER` | SSH username on OCI (e.g. `ubuntu`) |
+| `SSH_PRIVATE_KEY` | OCI SSH private key (same as AcaMaster) |
+| `SERVER_HOST` | OCI instance IP |
+| `SERVER_USER` | `ubuntu` |
 
 ## First-time Setup
 
 ### 1. Register domain
-- Register `pcalhaurin.es` at DonDominio
-- Point nameservers to Cloudflare
+- Buy `pcalhaurin.es` at DonDominio
+- Change nameservers to Cloudflare's
 
 ### 2. Cloudflare DNS
-- Add zone `pcalhaurin.es`
-- Add CNAME records pointing to the existing tunnel:
-  - `pcalhaurin.es` → `<tunnel-id>.cfargotunnel.com` (proxied)
-  - `www.pcalhaurin.es` → `<tunnel-id>.cfargotunnel.com` (proxied)
+- Add zone `pcalhaurin.es` (free plan)
+- Add CNAME records:
+  ```
+  CNAME  @    → <tunnel-id>.cfargotunnel.com  (Proxied)
+  CNAME  www  → <tunnel-id>.cfargotunnel.com  (Proxied)
+  ```
 
-### 3. Server setup (run once)
-```bash
-ssh ubuntu@<server>
-bash /tmp/setup-server.sh  # or copy infra/setup-server.sh and run it
-```
-
-This creates:
-- `/var/www/pcalhaurin/` (web root)
-- Caddy site config with caching headers
-- Instructions for Cloudflare Tunnel ingress rule
-
-### 4. Cloudflare Tunnel ingress
-Edit `/etc/cloudflared/config.yml` on the server and add before the catch-all:
+### 3. Cloudflare Tunnel
+Edit `/etc/cloudflared/config.yml` on server, add before catch-all:
 ```yaml
 - hostname: pcalhaurin.es
-  service: http://localhost:80
+  service: http://localhost:8080
 - hostname: www.pcalhaurin.es
-  service: http://localhost:80
+  service: http://localhost:8080
 ```
 
-Then: `sudo systemctl restart cloudflared`
+Restart: `sudo systemctl restart cloudflared`
 
-### 5. GitHub repo
-- Create repo at `github.com/Dezemerel/pcalhaurin` (or ErebosForge org)
-- Add the 3 secrets above
-- Push code
-- GitHub Actions will build and deploy automatically
+### 4. Server directory
+```bash
+sudo mkdir -p /opt/pcalhaurin
+sudo chown ubuntu:ubuntu /opt/pcalhaurin
+```
+
+### 5. Push code
+- Create repo, add secrets, push to main
+- GitHub Actions builds, rsyncs, and starts the container
+
+## Port allocation
+
+| Service | Port |
+|---------|------|
+| AcaMaster Web | 5000 |
+| AcaMaster Saas | 5001 |
+| AcaMaster API | 7000 |
+| **PCAlhaurín** | **8080** |
 
 ## Subsequent deploys
 
-Just push to `main`. The pipeline handles everything:
-1. Checks out code
-2. Installs Hugo
-3. Builds with `hugo --minify`
-4. Rsyncs `site/public/` to server
-5. Verifies files landed correctly
+Push to `main`. Pipeline:
+1. Hugo builds static files
+2. Rsyncs entire project (Dockerfile + Caddyfile + public/) to server
+3. Runs `docker compose up -d --build --force-recreate`
+4. Health check verifies :8080 responds
 
 ## Rollback
 
-If something goes wrong:
 ```bash
-# On the server, the previous version is gone (rsync --delete).
-# Re-deploy any previous commit:
-git revert HEAD
-git push
-# Or manually re-trigger the workflow on a previous commit
+# On server
+cd /opt/pcalhaurin
+git log --oneline  # (not a git repo on server, but you can re-deploy)
+# Just re-push previous commit on GitHub and pipeline redeploys
 ```
 
-For a static site with no state, rollback = re-deploy old content. Takes <30 seconds.
+## Local testing with Docker
+
+```bash
+cd F:\src\ErebosForge\alhaurinpc
+cd site && hugo --minify && cd ..
+docker compose up -d --build
+# → http://127.0.0.1:8080
+```
