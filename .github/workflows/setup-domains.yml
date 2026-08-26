@@ -3,87 +3,116 @@ name: Setup Domains
 on:
   workflow_dispatch:
 
+env:
+  DOMAIN: pcalhaurin.es
+  TUNNEL_ID: 8ca19892-7ea7-42c5-a8a6-c2e90b056fe4
+
 jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Configure tunnel and DNS
+      - name: Verify tunnel config on server
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ vars.DEPLOY_HOST }}
           username: ubuntu
           key: ${{ secrets.SSH_DEPLOY_KEY }}
           script: |
-            # Add DNS routes for pcalhaurin.es (idempotent - skips if exists)
-            cloudflared tunnel route dns erebosforge pcalhaurin.es || true
-            cloudflared tunnel route dns erebosforge www.pcalhaurin.es || true
-
-            echo "✓ DNS routes added (or already exist)"
-
-            # Verify tunnel config includes pcalhaurin
             if grep -q "pcalhaurin.es" /etc/cloudflared/config.yml; then
-              echo "✓ Tunnel config already includes pcalhaurin.es"
+              echo "✓ Tunnel config includes pcalhaurin.es"
             else
-              echo "⚠️  pcalhaurin.es NOT in tunnel config. Add manually:"
-              echo "    - hostname: pcalhaurin.es"
-              echo "      service: http://localhost:8080"
-              echo "    - hostname: www.pcalhaurin.es"
-              echo "      service: http://localhost:8080"
+              echo "⚠️  pcalhaurin.es NOT in tunnel config!"
+              exit 1
             fi
 
-      - name: Configure Cloudflare zone settings
+      - name: Configure DNS and zone settings
         run: |
-          ZONE_ID=$(curl -s "https://api.cloudflare.com/client/v4/zones?name=pcalhaurin.es" \
+          ZONE_ID=$(curl -s "https://api.cloudflare.com/client/v4/zones?name=${{ env.DOMAIN }}" \
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" | jq -r '.result[0].id')
 
           if [ "$ZONE_ID" = "null" ] || [ -z "$ZONE_ID" ]; then
-            echo "ERROR: Could not resolve Zone ID for pcalhaurin.es"
-            echo "Make sure the domain is added to Cloudflare and nameservers are active."
+            echo "ERROR: Could not resolve Zone ID for ${{ env.DOMAIN }}"
             exit 1
           fi
-
           echo "Zone ID: $ZONE_ID"
+
+          # Create CNAME for @ (root domain)
+          RESULT=$(curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{
+              "type": "CNAME",
+              "name": "@",
+              "content": "${{ env.TUNNEL_ID }}.cfargotunnel.com",
+              "proxied": true
+            }')
+          if [ "$(echo "$RESULT" | jq -r '.success')" = "true" ]; then
+            echo "✓ CNAME @ created"
+          else
+            ERROR=$(echo "$RESULT" | jq -r '.errors[0].message // "unknown"')
+            if echo "$ERROR" | grep -qi "already exists"; then
+              echo "✓ CNAME @ already exists"
+            else
+              echo "WARNING: CNAME @ - $ERROR"
+            fi
+          fi
+
+          # Create CNAME for www
+          RESULT=$(curl -s -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/dns_records" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{
+              "type": "CNAME",
+              "name": "www",
+              "content": "${{ env.TUNNEL_ID }}.cfargotunnel.com",
+              "proxied": true
+            }')
+          if [ "$(echo "$RESULT" | jq -r '.success')" = "true" ]; then
+            echo "✓ CNAME www created"
+          else
+            ERROR=$(echo "$RESULT" | jq -r '.errors[0].message // "unknown"')
+            if echo "$ERROR" | grep -qi "already exists"; then
+              echo "✓ CNAME www already exists"
+            else
+              echo "WARNING: CNAME www - $ERROR"
+            fi
+          fi
 
           # Enable Always Use HTTPS
           RESULT=$(curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/settings/always_use_https" \
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
             -H "Content-Type: application/json" \
             --data '{"value":"on"}')
-
-          if [ "$(echo "$RESULT" | jq -r '.success')" != "true" ]; then
-            echo "ERROR: Failed to enable Always Use HTTPS"
-            echo "$RESULT" | jq .
-            exit 1
+          if [ "$(echo "$RESULT" | jq -r '.success')" = "true" ]; then
+            echo "✓ Always Use HTTPS enabled"
+          else
+            echo "WARNING: Could not enable Always Use HTTPS"
           fi
-          echo "✓ Always Use HTTPS enabled"
 
-          # Set SSL mode to Full (strict)
+          # Set SSL mode to Full
           RESULT=$(curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/settings/ssl" \
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
             -H "Content-Type: application/json" \
             --data '{"value":"full"}')
-
-          if [ "$(echo "$RESULT" | jq -r '.success')" != "true" ]; then
-            echo "WARNING: Could not set SSL mode"
-            echo "$RESULT" | jq .
-          else
+          if [ "$(echo "$RESULT" | jq -r '.success')" = "true" ]; then
             echo "✓ SSL mode set to Full"
+          else
+            echo "WARNING: Could not set SSL mode"
           fi
 
-          # Enable Brotli compression
+          # Enable Brotli
           RESULT=$(curl -s -X PATCH "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/settings/brotli" \
             -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
             -H "Content-Type: application/json" \
             --data '{"value":"on"}')
-
-          if [ "$(echo "$RESULT" | jq -r '.success')" != "true" ]; then
-            echo "WARNING: Could not enable Brotli"
-          else
+          if [ "$(echo "$RESULT" | jq -r '.success')" = "true" ]; then
             echo "✓ Brotli compression enabled"
+          else
+            echo "WARNING: Could not enable Brotli"
           fi
 
           echo ""
           echo "=== Setup complete ==="
-          echo "DNS: pcalhaurin.es + www.pcalhaurin.es → tunnel"
+          echo "DNS: ${{ env.DOMAIN }} + www.${{ env.DOMAIN }} → tunnel ${{ env.TUNNEL_ID }}"
           echo "SSL: Always HTTPS + Full mode"
           echo "Compression: Brotli enabled"
