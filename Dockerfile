@@ -1,6 +1,9 @@
+FROM hugomods/hugo:exts-0.165.0 AS builder
+COPY site /src
+WORKDIR /src
+RUN hugo --minify
+
 FROM caddy:2-alpine
-
-COPY site/public /srv
+COPY --from=builder /src/public /srv
 COPY Caddyfile /etc/caddy/Caddyfile
-
 EXPOSE 80

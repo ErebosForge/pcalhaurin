@@ -43,9 +43,6 @@ jobs:
             cd "$RELEASE"
             git checkout "$GIT_REF"
 
-            # Build Hugo site
-            hugo --minify --source site
-
             # Stop old if symlink exists
             if [ -L "$CURRENT" ]; then
               OLD_RELEASE=$(readlink -f "$CURRENT")
