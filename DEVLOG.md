@@ -11,7 +11,7 @@
 - Target: 3-4 repairs/month from organic search + Google Business Profile
 - Contact: WhatsApp (+34 614 47 99 22) as primary CTA, phone secondary
 
-Located at: `F:\src\ErebosForge\alhaurinpc`
+Located at: `F:\src\ErebosForge\pcalhaurin`
 GitHub: `github.com/ErebosForge/pcalhaurin`
 
 ## Current State (2026-08-27)
@@ -57,6 +57,12 @@ GitHub: `github.com/ErebosForge/pcalhaurin`
   - llms.txt creado: formato Markdown con H1, descripción, servicios y enlaces (spec llmstxt.org v2)
   - <link rel="describedby" href="/llms.txt"> en baseof.html
   - CSS FAQ: details/summary con +/− toggle
+- ✅ CI/CD robustecido (2026-08-27):
+  - Health check real: curl pcalhaurin.es, verifica HTTP 200 con retry (5 intentos)
+  - Cross-check: verifica que acamaster.es sigue respondiendo después del deploy
+  - Workflow falla ruidosamente (exit 1) si health check no pasa
+  - Build antes de down (minimiza downtime)
+  - Docker image tag corregido: base-0.165.0 (exts-0.165.0 no existía)
 
 ### Backlog
 - [ ] Desactivar Cloudflare Managed robots.txt (Security → Bots → Content Signals) para que sirva el nuestro
@@ -66,7 +72,6 @@ GitHub: `github.com/ErebosForge/pcalhaurin`
 - [ ] First 3-5 Google reviews
 - [ ] Consider adding testimonials section (placeholder ready)
 - [ ] Renombrar carpeta local alhaurinpc → pcalhaurin (solo cosmético, no afecta prod)
-
 ## Architecture
 
 ```

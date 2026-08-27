@@ -29,37 +29,74 @@ jobs:
           key: ${{ secrets.SSH_DEPLOY_KEY }}
           envs: GH_TOKEN,GIT_REF
           script: |
-            set -e
-            BASE="${{ env.DEPLOY_PATH }}"
+            set -euo pipefail
+            BASE="/data/deployments/pcalhaurin"
             RELEASE="$BASE/releases/$(date +%Y%m%d_%H%M%S)"
             CURRENT="$BASE/current"
+
+            echo "=== Deploying pcalhaurin ==="
 
             # Ensure proxy network exists (Traefik)
             podman network exists proxy || podman network create proxy
 
             # Clone fresh release at the exact commit
             mkdir -p "$BASE/releases"
-            git clone https://x-access-token:${GH_TOKEN}@github.com/ErebosForge/pcalhaurin.git "$RELEASE"
+            git clone --quiet https://x-access-token:${GH_TOKEN}@github.com/ErebosForge/pcalhaurin.git "$RELEASE"
             cd "$RELEASE"
-            git checkout "$GIT_REF"
+            git checkout --quiet "$GIT_REF"
+            echo "Cloned at $(git rev-parse --short HEAD)"
+
+            # Build BEFORE stopping old (minimise downtime)
+            podman-compose build --no-cache
 
             # Stop old if symlink exists
             if [ -L "$CURRENT" ]; then
               OLD_RELEASE=$(readlink -f "$CURRENT")
-              cd "$OLD_RELEASE"
-              podman-compose down || true
+              if [ -f "$OLD_RELEASE/docker-compose.yml" ]; then
+                cd "$OLD_RELEASE"
+                podman-compose down 2>&1 || true
+              fi
             fi
 
-            # Swap symlink
+            # Swap symlink and start new
             ln -sfn "$RELEASE" "$CURRENT"
-
-            # Start new
             cd "$RELEASE"
-            podman-compose up -d --build
+            podman-compose up -d
 
-            # Health check (via Traefik)
-            sleep 3
-            curl -sf -H "Host: pcalhaurin.es" http://127.0.0.1:80 > /dev/null && echo "OK: site responding via Traefik" || echo "FAIL: site not responding"
+            # === Health checks ===
+            echo ""
+            echo "=== Health checks ==="
+            FAILED=0
+
+            # Check pcalhaurin.es (retry up to 5 times)
+            for i in 1 2 3 4 5; do
+              CODE=$(curl -sf -o /dev/null -w '%{http_code}' -H "Host: pcalhaurin.es" http://127.0.0.1:80 2>/dev/null || echo "000")
+              if [ "$CODE" = "200" ]; then
+                echo "✅ pcalhaurin.es → $CODE"
+                break
+              fi
+              echo "⏳ pcalhaurin.es → $CODE (attempt $i/5)"
+              sleep 3
+            done
+            if [ "$CODE" != "200" ]; then
+              echo "❌ pcalhaurin.es FAILED (last code: $CODE)"
+              FAILED=1
+            fi
+
+            # Cross-check: acamaster.es should still be responding
+            CODE=$(curl -sf -o /dev/null -w '%{http_code}' -H "Host: acamaster.es" http://127.0.0.1:80 2>/dev/null || echo "000")
+            if [ "$CODE" = "200" ]; then
+              echo "✅ acamaster.es → $CODE (cross-check)"
+            else
+              echo "⚠️  acamaster.es → $CODE (cross-check — not our fault but flagging)"
+            fi
+
+            echo ""
+            if [ "$FAILED" -ne 0 ]; then
+              echo "❌ DEPLOY FAILED — health checks did not pass"
+              exit 1
+            fi
+            echo "✅ Deploy successful"
 
             # Cleanup old releases (keep last 3)
             ls -dt $BASE/releases/*/ 2>/dev/null | tail -n +4 | xargs rm -rf 2>/dev/null || true
