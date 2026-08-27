@@ -62,7 +62,7 @@ cd site && hugo server
 Push to `main` triggers GitHub Actions:
 1. Clones repo on OCI server
 2. Docker multi-stage build: Hugo 0.165.0 builds site → Caddy serves result
-3. Container runs on port 8080 behind Traefik → Cloudflare Tunnel
+3. Container serves internally on port 80 behind the shared Traefik → Cloudflare Tunnel
 
 See `docs/deploy.md` for full setup instructions and secrets.
 
@@ -73,30 +73,17 @@ pcalhaurin/
 ├── README.md                  ← This file (not public)
 ├── DEVLOG.md                  ← Development log (not public)
 ├── Dockerfile                 ← Multi-stage: Hugo build + Caddy serve
-├── Caddyfile                  ← Caddy config (caching, gzip, security headers)
-├── docker-compose.yml         ← Container config (port 8080)
-├── docs/                      ← Specs, research (not public)
+├── Caddyfile                  ← Caching, gzip, security headers
+├── docker-compose.yml         ← Container on internal port 80
+├── docs/
 │   ├── spec.md                ← Site specification
-│   └── deploy.md              ← Deployment guide
-├── infra/
-│   └── setup-server.sh        ← One-time server setup script
+│   └── deploy.md              ← Application deployment guide
 ├── .github/workflows/
-│   ├── deploy.yml             ← CI/CD: clone → docker build → deploy
-│   └── setup-domains.yml      ← DNS setup via Cloudflare API
+│   └── deploy.yml             ← Application CI/CD only
 ├── site/                      ← Hugo project root
 │   ├── hugo.toml              ← Config (languages, metadata, URLs)
-│   ├── content/
-│   │   ├── _index.es.md       ← All Spanish text (YAML front matter)
-│   │   ├── _index.en.md       ← All English text
-│   │   ├── legal.es.md        ← Legal notice / privacy (ES)
-│   │   └── legal.en.md        ← Legal notice / privacy (EN)
-│   ├── layouts/
-│   │   ├── index.html         ← Main page template
-│   │   └── _default/
-│   │       ├── baseof.html    ← HTML shell (metas, fonts, WA float)
-│   │       └── legal.html     ← Legal page layout
-│   └── static/
-│       ├── css/style.css      ← Design tokens + responsive styles
-│       └── img/               ← 6 optimized photos (gallery)
+│   ├── content/               ← ES/EN content and legal pages
+│   ├── layouts/               ← Templates
+│   └── static/                ← CSS and images
 └── .gitignore
 ```

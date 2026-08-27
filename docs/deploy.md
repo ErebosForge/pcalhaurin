@@ -2,97 +2,49 @@
 
 ## Architecture
 
-```
-GitHub (push to main)
-  → GitHub Actions
-    → hugo build (in runner)
-    → rsync full project to server
-    → docker compose up -d --build
-      → Container: Caddy Alpine serves static files on :8080
-        → Cloudflare Tunnel routes pcalhaurin.es → localhost:8080
-          → Cloudflare handles SSL + CDN
-```
-
-## SSL
-
-Cloudflare handles all SSL termination. The container only serves HTTP on port 80 (mapped to host :8080). No certificates needed on the server.
-
-## GitHub Secrets Required
-
-Add in: GitHub repo → Settings → Secrets and variables → Actions
-
-| Secret | Value |
-|--------|-------|
-| `SSH_PRIVATE_KEY` | OCI SSH private key (same as AcaMaster) |
-| `SERVER_HOST` | OCI instance IP |
-| `SERVER_USER` | `ubuntu` |
-
-## First-time Setup
-
-### 1. Register domain
-- Buy `pcalhaurin.es` at DonDominio
-- Change nameservers to Cloudflare's
-
-### 2. Cloudflare DNS
-- Add zone `pcalhaurin.es` (free plan)
-- Add CNAME records:
-  ```
-  CNAME  @    → <tunnel-id>.cfargotunnel.com  (Proxied)
-  CNAME  www  → <tunnel-id>.cfargotunnel.com  (Proxied)
-  ```
-
-### 3. Cloudflare Tunnel
-Edit `/etc/cloudflared/config.yml` on server, add before catch-all:
-```yaml
-- hostname: pcalhaurin.es
-  service: http://localhost:8080
-- hostname: www.pcalhaurin.es
-  service: http://localhost:8080
+```text
+GitHub push to main
+  → GitHub Actions in this repository
+    → build and deploy the PCAlhaurín container to OCI
+      → container joins the external Podman network "proxy"
+        → shared Traefik from ErebosForge/common-infrastructure
+          → Cloudflare Tunnel from ErebosForge/common-infrastructure
+            → https://pcalhaurin.es
 ```
 
-Restart: `sudo systemctl restart cloudflared`
+The application repository owns the Hugo/Caddy image and its Traefik labels. It does not install Traefik, configure `cloudflared`, create the shared `proxy` network, or manage Cloudflare DNS.
 
-### 4. Server directory
-```bash
-sudo mkdir -p /opt/pcalhaurin
-sudo chown ubuntu:ubuntu /opt/pcalhaurin
+## Common infrastructure prerequisite
+
+Deploy the `common-infrastructure` repository first. Its Traefik component must be listening on ports 80 and 443 and its Cloudflare Tunnel component must point to the local Traefik HTTPS origin.
+
+The application pipeline only verifies that the external network exists. If it is missing, the deployment stops instead of creating shared infrastructure implicitly.
+
+## SSL and ports
+
+Traefik terminates TLS and obtains Let's Encrypt certificates. The PCAlhaurín container listens on its internal port 80 and does not publish a host port. Cloudflare may use the Tunnel or DNS Only mode; both paths terminate at the shared Traefik instance.
+
+## Application deployment
+
+Push to `main` to run `.github/workflows/deploy.yml`. The pipeline:
+
+1. Builds the container before stopping the previous release.
+2. Stops the previous PCAlhaurín release.
+3. Starts the new container on the external `proxy` network.
+4. Checks `https://pcalhaurin.es/` through local Traefik using `--resolve`.
+5. Cross-checks `https://acamaster.es/` without modifying it.
+6. Keeps the last three application releases.
+
+## DNS and Tunnel setup
+
+DNS and Tunnel configuration are maintained in:
+
+```text
+git@github.com:ErebosForge/common-infrastructure.git
 ```
 
-### 5. Push code
-- Create repo, add secrets, push to main
-- GitHub Actions builds, rsyncs, and starts the container
+The old application-owned `setup-domains.yml` and `infra/setup-server.sh` have intentionally been removed to avoid two repositories managing the same server infrastructure.
 
-## Port allocation
+## Local testing
 
-| Service | Port |
-|---------|------|
-| AcaMaster Web | 5000 |
-| AcaMaster Saas | 5001 |
-| AcaMaster API | 7000 |
-| **PCAlhaurín** | **8080** |
-
-## Subsequent deploys
-
-Push to `main`. Pipeline:
-1. Hugo builds static files
-2. Rsyncs entire project (Dockerfile + Caddyfile + public/) to server
-3. Runs `docker compose up -d --build --force-recreate`
-4. Health check verifies :8080 responds
-
-## Rollback
-
-```bash
-# On server
-cd /opt/pcalhaurin
-git log --oneline  # (not a git repo on server, but you can re-deploy)
-# Just re-push previous commit on GitHub and pipeline redeploys
-```
-
-## Local testing with Docker
-
-```bash
-cd F:\src\ErebosForge\alhaurinpc
-cd site && hugo --minify && cd ..
-docker compose up -d --build
-# → http://127.0.0.1:8080
-```
+For local development use the Hugo preview or a local compose setup. Production routing and certificates are provided by the shared OCI infrastructure, not by the application compose file.
