@@ -4,10 +4,10 @@
   --color-bg: #FAFAFA;
   --color-surface: #FFFFFF;
   --color-text: #1A1A1A;
-  --color-text-muted: #444444;
-  --color-primary: #A65316;
-  --color-primary-hover: #8C4510;
-  --color-cta: #C05F15;
+  --color-text-muted: #3D3D3D;
+  --color-primary: #8E4713;
+  --color-primary-hover: #753A0F;
+  --color-cta: #A65316;
   --color-nav: #1E293B;
   --color-nav-text: #F1F5F9;
   --color-border: #D1D5DB;
@@ -529,7 +529,7 @@ a.nav-brand:hover {
     110deg,
     var(--color-primary) 0%,
     var(--color-primary) 40%,
-    #E8965A 50%,
+    #D4844A 50%,
     var(--color-primary) 60%,
     var(--color-primary) 100%
   );

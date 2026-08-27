@@ -30,10 +30,12 @@
   <meta name="twitter:title" content="{{ .Title }}">
   <meta name="twitter:description" content="{{ .Description }}">
   <meta name="twitter:image" content="{{ .Permalink }}img/01-cpu-amd.jpg">
-  <!-- Font: Inter (400, 600, 700) -->
+  <!-- Font: Inter (400, 600, 700) — preloaded for faster render -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="describedby" href="/llms.txt">
 </head>
@@ -47,7 +49,7 @@
   <footer class="footer-sticky" role="contentinfo">
     <div class="container footer-inner">
       <span class="footer-contact">
-        <a href="https://wa.me/{{ site.Params.whatsapp }}?text={{ if eq .Language.Lang "es" }}Hola,%20necesito%20presupuesto{{ else }}Hi,%20I%20need%20a%20quote{{ end }}" target="_blank" rel="noopener" aria-label="WhatsApp">💬 WhatsApp</a>
+        <a href="https://wa.me/{{ site.Params.whatsapp }}?text={{ if eq .Language.Lang "es" }}Hola,%20necesito%20presupuesto{{ else }}Hi,%20I%20need%20a%20quote{{ end }}" target="_blank" rel="noopener">💬 WhatsApp</a>
         · {{ site.Params.phone }}
       </span>
       <span class="footer-copy">

@@ -63,15 +63,26 @@ GitHub: `github.com/ErebosForge/pcalhaurin`
   - Workflow falla ruidosamente (exit 1) si health check no pasa
   - Build antes de down (minimiza downtime)
   - Docker image tag corregido: base-0.165.0 (exts-0.165.0 no existía)
+- ✅ PageSpeed Insights audit & fixes (2026-08-27, puntuaciones pre-fix: Perf 92/99, A11y 96/89, BP 100, SEO 92):
+  - Fix contraste: primary #A65316 → #8E4713 (ratio 5.7:1, pasa WCAG AA normal text)
+  - Fix contraste: text-muted #444444 → #3D3D3D (ratio 10.4:1 sobre bg)
+  - Fix contraste: CTA #C05F15 → #A65316 (4.8:1, pasa AA large text para botones)
+  - Fix ARIA: gallery role="group" → role="region" con aria-label (aria-roledescription válido en region)
+  - Fix link-name: eliminado aria-label redundante de nav WhatsApp link (el texto visible basta)
+  - Fix link-name: eliminado aria-label="WhatsApp" de footer link (visible text "💬 WhatsApp" suficiente)
+  - Fix legal page: span.lang-switch → nav.lang-switch (span no soporta aria-label)
+  - Font loading optimizado: preload + media="print" trick (Google Fonts no bloquea render)
+  - Shimmer gradient adaptado a nueva paleta de color (#D4844A)
 
 ### Backlog
-- [ ] Desactivar Cloudflare Managed robots.txt (Security → Bots → Content Signals) para que sirva el nuestro
+- [ ] Desactivar Cloudflare Managed robots.txt (Security → Bots → Content Signals) — PageSpeed lo reporta como fallo
 - [ ] Google Search Console: enviar sitemap y solicitar indexación de URL principal
 - [ ] Google Business Profile setup
 - [ ] Bing Webmaster Tools submission
 - [ ] First 3-5 Google reviews
 - [ ] Consider adding testimonials section (placeholder ready)
 - [ ] Renombrar carpeta local alhaurinpc → pcalhaurin (solo cosmético, no afecta prod)
+- [ ] Considerar self-hosting de Inter font (elimina dependencia de Google Fonts, mejora FCP móvil)
 ## Architecture
 
 ```
