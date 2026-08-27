@@ -4,10 +4,10 @@
   --color-bg: #FAFAFA;
   --color-surface: #FFFFFF;
   --color-text: #1A1A1A;
-  --color-text-muted: #4A4A4A;
-  --color-primary: #B85C1A;
-  --color-primary-hover: #A04E12;
-  --color-cta: #D4691A;
+  --color-text-muted: #444444;
+  --color-primary: #A65316;
+  --color-primary-hover: #8C4510;
+  --color-cta: #C05F15;
   --color-nav: #1E293B;
   --color-nav-text: #F1F5F9;
   --color-border: #D1D5DB;
@@ -166,12 +166,16 @@ a.nav-brand:hover {
 
 .lang-switch {
   font-size: var(--text-sm);
-  color: var(--color-border);
 }
 
 .lang-switch a {
   color: var(--color-nav-text);
   font-weight: 500;
+  text-decoration: none;
+}
+
+.lang-switch a:hover {
+  text-decoration: underline;
 }
 
 /* === HERO === */
@@ -415,6 +419,77 @@ a.nav-brand:hover {
 .legal-content em {
   color: var(--color-text-muted);
   font-size: var(--text-sm);
+}
+
+/* === FAQ === */
+.faq-section {
+  background: var(--color-bg);
+}
+
+.faq-list {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.faq-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.faq-item[open] {
+  box-shadow: 0 2px 8px rgba(184, 92, 26, 0.08);
+}
+
+.faq-question {
+  padding: var(--space-md) var(--space-lg);
+  font-weight: 600;
+  font-size: var(--text-base);
+  color: var(--color-text);
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.faq-question::-webkit-details-marker {
+  display: none;
+}
+
+.faq-question::after {
+  content: '+';
+  font-size: var(--text-xl);
+  color: var(--color-primary);
+  font-weight: 700;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.faq-item[open] .faq-question::after {
+  content: '−';
+  transform: rotate(0deg);
+}
+
+.faq-question:hover {
+  color: var(--color-primary);
+}
+
+.faq-answer {
+  padding: 0 var(--space-lg) var(--space-lg);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading);
+}
+
+.faq-answer p {
+  margin-bottom: 0;
 }
 
 /* === WHATSAPP FLOATING BUTTON === */

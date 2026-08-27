@@ -14,7 +14,7 @@
 Located at: `F:\src\ErebosForge\alhaurinpc`
 GitHub: `github.com/ErebosForge/pcalhaurin`
 
-## Current State (2026-08-26)
+## Current State (2026-08-27)
 
 ### Done
 - ✅ Market research & competitor analysis (TorrePhone, ZonaTech, Mr Micro, Cronoshare)
@@ -41,13 +41,31 @@ GitHub: `github.com/ErebosForge/pcalhaurin`
 - ✅ Setup-domains workflow: Cloudflare API for DNS CNAMEs + HTTPS + SSL + Brotli
 - ✅ Tunnel config: pcalhaurin.es + www routed via Cloudflare Tunnel on OCI
 - ✅ Traefik migration completed (all services behind reverse proxy on :80)
+- ✅ First deploy successful — site live at https://pcalhaurin.es/
+- ✅ SEO audit & improvements (2026-08-27):
+  - robots.txt estático con directiva Sitemap (Cloudflare Managed lo sobreescribe si está activo)
+  - Custom sitemap template: excluye /tags/ y /categories/ vacías, priority 1.0 para home
+  - FAQ section: 6 preguntas SEO-targeted (cuánto cuesta, domicilio, tiempo, lento, Mac, cita)
+  - Schema FAQPage JSON-LD completo
+  - CTA mejorado: "Pide presupuesto gratis" (palabra "gratis" mejora CTR)
+  - Hugo config: languageCode/languageName migrados a locale/label (arregla deprecations v0.158+)
+- ✅ Accesibilidad & navegación agéntica (2026-08-27, fixes de Google Search Console):
+  - Fix ARIA: quitado role="listitem" de article.service-card (inválido)
+  - Fix ARIA: span.lang-switch → nav.lang-switch (span no admite aria-label)
+  - Fix links: texto visible en enlace de idioma (antes podía quedar vacío)
+  - Fix contraste: primary #B85C1A → #A65316 (ratio ~5.3:1 sobre blanco)
+  - llms.txt creado: formato Markdown con H1, descripción, servicios y enlaces (spec llmstxt.org v2)
+  - <link rel="describedby" href="/llms.txt"> en baseof.html
+  - CSS FAQ: details/summary con +/− toggle
 
 ### Backlog
-- [ ] First successful deploy (container running, site accessible)
+- [ ] Desactivar Cloudflare Managed robots.txt (Security → Bots → Content Signals) para que sirva el nuestro
+- [ ] Google Search Console: enviar sitemap y solicitar indexación de URL principal
 - [ ] Google Business Profile setup
 - [ ] Bing Webmaster Tools submission
 - [ ] First 3-5 Google reviews
 - [ ] Consider adding testimonials section (placeholder ready)
+- [ ] Renombrar carpeta local alhaurinpc → pcalhaurin (solo cosmético, no afecta prod)
 
 ## Architecture
 

@@ -1,10 +1,10 @@
 ---
 title: "PC Repair in Alhaurín de la Torre"
-description: "Computer repair technician in Alhaurín de la Torre, Málaga. Laptops and desktops: format, virus removal, RAM and SSD upgrades, diagnostics. Quote via WhatsApp."
+description: "Computer repair technician in Alhaurín de la Torre, Málaga. Laptops and desktops: format, virus removal, RAM and SSD upgrades, diagnostics. Free quote via WhatsApp."
 hero:
   headline: "PC repair in Alhaurín de la Torre"
   subtitle: "Laptops, desktops and servers. Not working, slow or infected? You can bring it to me or I come to you."
-  cta: "Get a quote"
+  cta: "Get a free quote"
 services:
   - title: "Clean install / Format"
     desc: "Fresh Windows, drivers and essential software. Your data backed up first."
@@ -34,6 +34,19 @@ zones:
   - "Pizarra"
 zones_text: "Computer repair service in Cártama, Campanillas, Churriana, Alhaurín el Grande and Pizarra. Home visits available."
 about: "IT technician with 17 years of professional experience. I repair laptops, desktops and servers (Windows and Linux, I don't work on Macs). Direct contact, no middlemen. I explain what went wrong and how to prevent it."
+faq:
+  - q: "How much does a PC repair cost in Alhaurín de la Torre?"
+    a: "It depends on the issue. A full format with backup costs €35–45. Virus removal €25–35. Free diagnosis — send me a WhatsApp and I'll quote you, no commitment."
+  - q: "Do you do home visits?"
+    a: "Yes. I travel to homes in Alhaurín de la Torre and nearby towns (Cártama, Campanillas, Churriana, Alhaurín el Grande, Pizarra). Home visit surcharge is €20."
+  - q: "How long does a repair take?"
+    a: "Most repairs are done within 24–48 hours. A format is usually ready the same day. If parts need ordering, I'll let you know the timeframe."
+  - q: "My computer is very slow — can it be fixed?"
+    a: "Almost always. The most common causes are too many startup programs, an old hard drive (switching to SSD makes the biggest difference) or malware. A tune-up for €25–35 or an SSD upgrade makes a huge difference."
+  - q: "Do you repair Macs?"
+    a: "No, I only work with Windows and Linux. For Mac repairs I'd recommend finding a specialist Apple service centre."
+  - q: "Do I need an appointment?"
+    a: "No formal appointment needed. Message me on WhatsApp, describe the problem, and we'll arrange a time that suits you. Hours: Monday to Friday 18:00–21:00, Saturday mornings."
 contact:
   phone: "+34 614 47 99 22"
   whatsapp: "34614479922"

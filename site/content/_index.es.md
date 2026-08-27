@@ -1,10 +1,10 @@
 ---
 title: "Reparación de Ordenadores en Alhaurín de la Torre"
-description: "Técnico informático en Alhaurín de la Torre. Reparo ordenadores y portátiles: formateos, virus, ampliaciones de RAM y SSD, diagnóstico. Presupuesto por WhatsApp."
+description: "Técnico informático en Alhaurín de la Torre. Reparo ordenadores y portátiles: formateos, virus, ampliaciones de RAM y SSD, diagnóstico. Presupuesto gratis por WhatsApp."
 hero:
   headline: "Reparación de ordenadores en Alhaurín de la Torre"
   subtitle: "Portátiles, sobremesa y servidores. ¿Tu PC no funciona, va lento o tiene virus? Puedes traerlo o me acerco yo."
-  cta: "Pide presupuesto"
+  cta: "Pide presupuesto gratis"
 services:
   - title: "Formateo y reinstalación"
     desc: "Windows limpio, drivers y programas básicos. Copia de seguridad incluida."
@@ -34,6 +34,19 @@ zones:
   - "Pizarra"
 zones_text: "Servicio técnico de ordenadores en Cártama, Campanillas, Churriana, Alhaurín el Grande y Pizarra. Desplazamiento a domicilio disponible."
 about: "Soy técnico informático con 17 años de experiencia profesional. Reparo portátiles, equipos de sobremesa y servidores (Windows y Linux, no trabajo con Mac). Trato directo, sin intermediarios. Te explico qué ha pasado y cómo evitarlo en el futuro."
+faq:
+  - q: "¿Cuánto cuesta reparar un ordenador en Alhaurín de la Torre?"
+    a: "Depende de la avería. Un formateo completo con copia de seguridad cuesta entre 35 y 45€. Eliminación de virus entre 25 y 35€. Diagnóstico gratuito: mándame un WhatsApp y te doy presupuesto sin compromiso."
+  - q: "¿Reparáis a domicilio?"
+    a: "Sí. Me desplazo a domicilio en Alhaurín de la Torre y pueblos cercanos (Cártama, Campanillas, Churriana, Alhaurín el Grande, Pizarra). El desplazamiento tiene un coste adicional de 20€."
+  - q: "¿Cuánto tardáis en reparar un ordenador?"
+    a: "La mayoría de reparaciones se resuelven en 24-48 horas. Un formateo normalmente está listo en el día. Si hace falta pedir alguna pieza, te aviso del plazo."
+  - q: "Mi ordenador va muy lento, ¿tiene solución?"
+    a: "Casi siempre. Las causas más comunes son exceso de programas al arrancar, disco duro viejo (cambiar a SSD es lo que más se nota) o virus. Con una puesta a punto por 25-35€ o un cambio a SSD se nota una diferencia brutal."
+  - q: "¿Reparáis Mac?"
+    a: "No, solo trabajo con Windows y Linux. Para Mac te recomiendo buscar un servicio técnico especializado en Apple."
+  - q: "¿Necesito cita previa?"
+    a: "No hace falta cita formal. Escríbeme por WhatsApp, me cuentas el problema y quedamos cuando te venga bien. Horario: lunes a viernes de 18:00 a 21:00, sábados por la mañana."
 contact:
   phone: "+34 614 47 99 22"
   whatsapp: "34614479922"

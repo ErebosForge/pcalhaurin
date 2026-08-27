@@ -5,25 +5,26 @@ defaultContentLanguageInSubdir = false
 
 [languages]
   [languages.es]
-    languageName = "Español"
+    label = "Español"
+    locale = "es-ES"
     weight = 1
     title = "Reparación de Ordenadores en Alhaurín de la Torre | PCAlhaurín"
   [languages.en]
-    languageName = "English"
+    label = "English"
+    locale = "en-GB"
     weight = 2
     title = "PC Repair in Alhaurín de la Torre | PCAlhaurín"
-    languageCode = "en-GB"
 
 [params]
   phone = "+34 614 47 99 22"
   whatsapp = "34614479922"
 
 [outputs]
-  home = ["HTML"]
+  home = ["HTML", "RSS"]
 
 [sitemap]
-  changefreq = "monthly"
+  changefreq = "weekly"
   priority = 0.5
 
-enableRobotsTXT = true
+enableRobotsTXT = false
 disableKinds = ["taxonomy", "term"]
