@@ -50,7 +50,7 @@ jobs:
             echo "Cloned at $(git rev-parse --short HEAD)"
 
             # Build BEFORE stopping old (minimise downtime)
-            podman-compose build --no-cache
+            COMPOSE_PROJECT_NAME=pcalhaurin podman-compose build --no-cache
 
             # Stop old if symlink exists
             if [ -L "$CURRENT" ]; then
@@ -61,10 +61,20 @@ jobs:
               fi
             fi
 
+            # Remove any stale PCAlhaurin containers left by older release projects.
+            # The service label is unique to this application and prevents duplicate Traefik routers.
+            for CONTAINER in $(podman ps -a --format '{{.Names}}'); do
+              LABELS=$(podman inspect --format '{{json .Config.Labels}}' "$CONTAINER" 2>/dev/null || true)
+              if printf '%s' "$LABELS" | grep -Fq '"traefik.http.services.pcalhaurin.loadbalancer.server.port":"80"'; then
+                echo "Removing previous PCAlhaurin container: $CONTAINER"
+                podman rm -f "$CONTAINER" >/dev/null
+              fi
+            done
+
             # Swap symlink and start new
             ln -sfn "$RELEASE" "$CURRENT"
             cd "$RELEASE"
-            podman-compose up -d
+            COMPOSE_PROJECT_NAME=pcalhaurin podman-compose up -d
 
             # === Health checks ===
             echo ""
