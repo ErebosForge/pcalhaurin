@@ -21,7 +21,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="{{ .Permalink }}">
   <meta property="og:locale" content="{{ if eq .Language.Lang "es" }}es_ES{{ else }}en_GB{{ end }}">
-  <meta property="og:image" content="{{ .Permalink }}img/01-cpu-amd.jpg">
+  <meta property="og:image" content="{{ "img/01-cpu-amd.jpg" | absURL }}">
   <meta property="og:image:width" content="800">
   <meta property="og:image:height" content="600">
   <meta property="og:site_name" content="PCAlhaurín">
@@ -29,7 +29,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{ .Title }}">
   <meta name="twitter:description" content="{{ .Description }}">
-  <meta name="twitter:image" content="{{ .Permalink }}img/01-cpu-amd.jpg">
+  <meta name="twitter:image" content="{{ "img/01-cpu-amd.jpg" | absURL }}">
   <!-- Font: Inter (400, 600, 700) — preloaded for faster render -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
