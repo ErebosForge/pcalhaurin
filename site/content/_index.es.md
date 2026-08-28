@@ -1,5 +1,5 @@
 ---
-title: "Reparación de Ordenadores en Alhaurín de la Torre"
+title: "PCAlhaurín | Reparación de ordenadores en Alhaurín de la Torre"
 description: "Técnico informático en Alhaurín de la Torre. Reparación de ordenadores y portátiles, software y hardware, con diagnóstico claro y presupuesto previo. Solicite información por WhatsApp."
 hero:
   headline: "Reparación de ordenadores en Alhaurín de la Torre"
