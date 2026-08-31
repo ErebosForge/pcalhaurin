@@ -11,6 +11,19 @@
   <meta name="geo.placename" content="Alhaurín de la Torre">
   <meta name="theme-color" content="#1E293B">
   <link rel="canonical" href="{{ .Permalink }}">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  {{ if and .IsHome (eq .Language.Lang "es") }}
+  <!-- WebSite name for Google Search -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "PCAlhaurín",
+    "alternateName": ["PC Alhaurín", "pcalhaurin.es"],
+    "url": "https://pcalhaurin.es/"
+  }
+  </script>
+  {{ end }}
   {{ range .Translations }}
   <link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}">
   {{ end }}
