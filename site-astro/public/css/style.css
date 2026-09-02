@@ -177,7 +177,7 @@ img { max-width: 100%; height: auto; display: block; }
 .nav {
   background: var(--color-nav);
   color: var(--color-nav-text);
-  padding: var(--space-md) 0;
+  padding: var(--space-sm) 0;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -186,11 +186,12 @@ img { max-width: 100%; height: auto; display: block; }
 .nav .container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-md);
+  gap: var(--space-lg);
+  flex-wrap: wrap;
 }
 
 a.nav-brand {
+  flex: 0 0 auto;
   font-weight: 700;
   font-size: var(--text-xl);
   color: var(--color-nav-text);
@@ -216,10 +217,36 @@ a.nav-brand:hover {
   font-weight: 400;
 }
 
+.nav-links {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-lg);
+  margin-left: auto;
+}
+
+.nav-links a {
+  color: var(--color-nav-text);
+  border-bottom: 2px solid transparent;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: var(--space-xs) 0;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-links a:hover,
+.nav-links a[aria-current='page'] {
+  border-bottom-color: var(--color-cta);
+  color: var(--color-nav-text);
+  text-decoration: none;
+}
+
 .nav-right {
   display: flex;
   align-items: center;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
+  flex: 0 0 auto;
 }
 
 .nav-phone {
@@ -230,6 +257,7 @@ a.nav-brand:hover {
   align-items: center;
   gap: var(--space-xs);
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .nav-phone:hover {
@@ -245,10 +273,54 @@ a.nav-brand:hover {
   color: var(--color-nav-text);
   font-weight: 600;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .lang-switch a:hover {
   text-decoration: underline;
+}
+
+.section[id] {
+  scroll-margin-top: 4rem;
+}
+
+@media (max-width: 860px) {
+  .nav .container {
+    gap: var(--space-sm) var(--space-md);
+  }
+
+  .nav-links {
+    flex-basis: 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+    order: 3;
+    overflow-x: auto;
+    padding-bottom: var(--space-xs);
+    scrollbar-width: none;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+
+  .section[id] {
+    scroll-margin-top: 7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav .container {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
+
+  .nav-right {
+    gap: var(--space-md);
+  }
+
+  a.nav-brand {
+    font-size: var(--text-lg);
+  }
 }
 
 /* === HERO === */

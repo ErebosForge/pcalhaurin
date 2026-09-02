@@ -44,6 +44,11 @@ export interface SiteContent {
   /** UI strings that were inline conditionals in the Hugo template */
   ui: {
     mainNav: string;
+    navHome: string;
+    navServices: string;
+    navHowWeWork: string;
+    navAreas: string;
+    navContact: string;
     changeLang: string;
     langLabel: string;
     skipToContent: string;

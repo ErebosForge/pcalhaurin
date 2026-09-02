@@ -82,21 +82,30 @@ const homePath = c.lang === 'es' ? '/' : '/en/';
 <body>
   <a href="#main-content" class="skip-link">{c.ui.skipToContent}</a>
 
-  <!-- Nav -->
-  <nav class="nav" aria-label={c.ui.mainNav}>
-    <div class="container">
-      <a href={homePath} class="nav-brand"><span class="brand-pc">PC</span><span class="brand-alhaurin">Alhaurin</span><span class="brand-tld">.es</span></a>
-      <div class="nav-right">
-        <nav class="lang-switch" aria-label={c.ui.changeLang}>
-          <a href={altPath} hreflang={altLang}>{altLang === 'es' ? '🇪🇸 Español' : '🇬🇧 English'}</a>
-        </nav>
-        <a href={`https://wa.me/${whatsapp}?text=${c.ui.navQuoteText}`} class="nav-phone" target="_blank" rel="noopener">
-          <WhatsAppIcon size={16} />
-          WhatsApp
-        </a>
+  <!-- Primary navigation -->
+  <header class="site-header">
+    <nav class="nav" aria-label={c.ui.mainNav}>
+      <div class="container">
+        <a href={homePath} class="nav-brand"><span class="brand-pc">PC</span><span class="brand-alhaurin">Alhaurin</span><span class="brand-tld">.es</span></a>
+        <div class="nav-links">
+          <a href={homePath} aria-current={path === homePath ? 'page' : undefined}>{c.ui.navHome}</a>
+          <a href={`${homePath}#services`}>{c.ui.navServices}</a>
+          <a href={`${homePath}#how-we-work`}>{c.ui.navHowWeWork}</a>
+          <a href={`${homePath}#zones`}>{c.ui.navAreas}</a>
+          <a href={`${homePath}#contact`}>{c.ui.navContact}</a>
+        </div>
+        <div class="nav-right">
+          <div class="lang-switch">
+            <a href={altPath} hreflang={altLang}>{altLang === 'es' ? '🇪🇸 Español' : '🇬🇧 English'}</a>
+          </div>
+          <a href={`https://wa.me/${whatsapp}?text=${c.ui.navQuoteText}`} class="nav-phone" target="_blank" rel="noopener">
+            <WhatsAppIcon size={16} />
+            WhatsApp
+          </a>
+        </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </header>
 
   <slot />
 
