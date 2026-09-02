@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://pcalhaurin.es/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pcalhaurin.es/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pcalhaurin.es/en/"/>
+  </url>
+  <url>
+    <loc>https://pcalhaurin.es/en/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pcalhaurin.es/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pcalhaurin.es/en/"/>
+  </url>
+  <url>
+    <loc>https://pcalhaurin.es/legal/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pcalhaurin.es/legal/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pcalhaurin.es/en/legal/"/>
+  </url>
+  <url>
+    <loc>https://pcalhaurin.es/en/legal/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pcalhaurin.es/legal/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pcalhaurin.es/en/legal/"/>
+  </url>
+</urlset>

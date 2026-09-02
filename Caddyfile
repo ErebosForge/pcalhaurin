@@ -22,6 +22,6 @@
         Referrer-Policy "strict-origin-when-cross-origin"
     }
 
-    # SPA fallback: directory requests serve index.html
-    try_files {path} {path}/ /index.html
+    # The site is static (Astro output): existing files/directories are served
+    # normally; unknown URLs must remain real 404 responses.
 }

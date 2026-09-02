@@ -1,0 +1,8 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Home from '../../components/Home.astro';
+import { en } from '../../data/en';
+---
+<BaseLayout content={en} path="/en/" altPath="/" altLang="es">
+  <Home content={en} canonical="https://pcalhaurin.es/en/" />
+</BaseLayout>

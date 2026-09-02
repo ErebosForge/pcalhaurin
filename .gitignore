@@ -1,6 +1,7 @@
-# Hugo build output
-site/public/
-site/resources/_gen/
+# Astro build output / deps
+site-astro/dist/
+site-astro/node_modules/
+site-astro/.astro/
 
 # OS
 Thumbs.db

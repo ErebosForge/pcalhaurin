@@ -1,0 +1,151 @@
+---
+import type { SiteContent } from '../data/types';
+import WhatsAppIcon from '../components/WhatsAppIcon.astro';
+
+interface Props {
+  content: SiteContent;
+  /** canonical path for THIS page, e.g. "/", "/en/", "/legal/", "/en/legal/" */
+  path: string;
+  /** canonical path of the translated counterpart, for hreflang */
+  altPath: string;
+  altLang: 'es' | 'en';
+  /** true only for the ES home, to emit the WebSite JSON-LD (as in Hugo) */
+  isEsHome?: boolean;
+  /** override <title>/description for legal pages */
+  title?: string;
+  description?: string;
+}
+
+const SITE = 'https://pcalhaurin.es';
+const { content, path, altPath, altLang, isEsHome = false, title, description } = Astro.props;
+
+const c = content;
+const phone = c.contact.phone;
+const whatsapp = c.contact.whatsapp;
+
+const pageTitle = title ?? c.title;
+const pageDesc = description ?? c.description;
+
+const canonical = SITE + path;
+const altHref = SITE + altPath;
+const ogImage = SITE + '/img/01-cpu-amd.jpg';
+const year = new Date().getFullYear();
+const legalPath = c.lang === 'es' ? '/legal/' : '/en/legal/';
+const homePath = c.lang === 'es' ? '/' : '/en/';
+---
+<!DOCTYPE html>
+<html lang={c.lang}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{pageTitle}</title>
+  <meta name="description" content={pageDesc} />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="PCAlhaurín" />
+  <meta name="geo.region" content="ES-MA" />
+  <meta name="geo.placename" content="Alhaurín de la Torre" />
+  <meta name="theme-color" content="#1E293B" />
+  <link rel="canonical" href={canonical} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  {isEsHome && (
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'PCAlhaurín',
+      alternateName: ['PC Alhaurín', 'PCAlhaurin', 'pcalhaurin.es'],
+      url: 'https://pcalhaurin.es/',
+    })} />
+  )}
+  <!-- hreflang: this page + the translated counterpart -->
+  <link rel="alternate" hreflang={c.lang} href={canonical} />
+  <link rel="alternate" hreflang={altLang} href={altHref} />
+  <!-- Open Graph -->
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={pageDesc} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:locale" content={c.ogLocale} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="800" />
+  <meta property="og:image:height" content="600" />
+  <meta property="og:site_name" content="PCAlhaurín" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={pageDesc} />
+  <meta name="twitter:image" content={ogImage} />
+  <!-- Font: Inter — self-hosted -->
+  <link rel="preload" href="/fonts/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="describedby" href="/llms.txt" />
+</head>
+<body>
+  <a href="#main-content" class="skip-link">{c.ui.skipToContent}</a>
+
+  <!-- Nav -->
+  <nav class="nav" aria-label={c.ui.mainNav}>
+    <div class="container">
+      <a href={homePath} class="nav-brand"><span class="brand-pc">PC</span><span class="brand-alhaurin">Alhaurin</span><span class="brand-tld">.es</span></a>
+      <div class="nav-right">
+        <nav class="lang-switch" aria-label={c.ui.changeLang}>
+          <a href={altPath} hreflang={altLang}>{altLang === 'es' ? '🇪🇸 Español' : '🇬🇧 English'}</a>
+        </nav>
+        <a href={`https://wa.me/${whatsapp}?text=${c.ui.navQuoteText}`} class="nav-phone" target="_blank" rel="noopener">
+          <WhatsAppIcon size={16} />
+          WhatsApp
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <slot />
+
+  <!-- Sticky footer with contact info -->
+  <footer class="footer-sticky" role="contentinfo">
+    <div class="container footer-inner">
+      <span class="footer-contact">
+        <a href={`https://wa.me/${whatsapp}?text=${c.ui.footerQuoteText}`} target="_blank" rel="noopener">💬 WhatsApp</a>
+        · {phone}
+      </span>
+      <span class="footer-copy">
+        © {year} PCAlhaurín ·
+        <a href={legalPath} class="footer-legal">{c.ui.legalLink}</a>
+      </span>
+    </div>
+  </footer>
+
+  <!-- WhatsApp floating button -->
+  <a
+    href={`https://wa.me/${whatsapp}?text=${c.ui.floatHelpText}`}
+    class="wa-float"
+    target="_blank"
+    rel="noopener"
+    aria-label={c.ui.contactWhatsApp}
+  >
+    <WhatsAppIcon size={28} fill="#fff" />
+  </a>
+
+  <!-- Scroll fade-in (no dependencies, respects prefers-reduced-motion) -->
+  <script is:inline>
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('.section:not(.hero)').forEach(function (el) {
+        el.classList.add('fade-in');
+      });
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      document.querySelectorAll('.fade-in').forEach(function (el) {
+        observer.observe(el);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+---
+import type { SiteContent } from '../data/types';
+import WhatsAppIcon from './WhatsAppIcon.astro';
+
+interface Props {
+  content: SiteContent;
+  /** canonical URL of this home page, for JSON-LD @id/url */
+  canonical: string;
+}
+const { content: c, canonical } = Astro.props;
+const whatsapp = c.contact.whatsapp;
+
+const galleryDims: [number, number][] = [
+  [800, 450],
+  [600, 800],
+  [800, 600],
+  [800, 600],
+  [800, 600],
+  [600, 800],
+];
+const galleryImgs = [
+  '/img/01-cpu-amd.jpg',
+  '/img/02-socket-lga.jpg',
+  '/img/03-dell-placa.jpg',
+  '/img/04-amstrad-running.jpg',
+  '/img/05-hardware-error.jpg',
+  '/img/06-pcb-gold.jpg',
+];
+
+const localBusiness = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': `${canonical}#business`,
+  name: 'PCAlhaurín',
+  alternateName: 'PC Alhaurín',
+  description: c.description,
+  url: canonical,
+  telephone: c.contact.phone,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Avenida El Limón',
+    addressLocality: 'Alhaurín de la Torre',
+    addressRegion: 'Málaga',
+    postalCode: '29130',
+    addressCountry: 'ES',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: '36.6642', longitude: '-4.5611' },
+  areaServed: c.zones.map((z) => ({ '@type': 'City', name: z })),
+  openingHours: ['Mo-Fr 18:00-21:00', 'Sa 09:00-13:00'],
+  priceRange: '€€',
+  image: 'https://pcalhaurin.es/img/01-cpu-amd.jpg',
+  sameAs: [],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: c.ui.offerCatalogName,
+    itemListElement: c.services.map((s) => ({
+      '@type': 'Offer',
+      itemOffered: { '@type': 'Service', name: s.title, description: s.desc },
+    })),
+  },
+};
+
+const faqPage = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: c.faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+<main id="main-content">
+  <!-- Hero -->
+  <section class="section hero" aria-labelledby="hero-heading">
+    <div class="container">
+      <h1 id="hero-heading" class="hero-title shimmer">{c.hero.headline}</h1>
+      <p>{c.hero.subtitle}</p>
+      <div class="btn-group">
+        <a href={`https://wa.me/${whatsapp}?text=${c.ui.heroQuoteText}`} class="btn btn-whatsapp" target="_blank" rel="noopener">
+          <WhatsAppIcon size={20} fill="white" />
+          {c.hero.cta}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section" aria-labelledby="services-heading">
+    <div class="container">
+      <h2 id="services-heading" class="section-title">{c.ui.servicesHeading}</h2>
+      <div class="services-grid">
+        {c.services.map((s) => (
+          <article class="service-card">
+            <h3>{s.title}</h3>
+            <p>{s.desc}</p>
+            <span class="service-price" aria-label={c.ui.priceLabel(s.price)}>{s.price}</span>
+          </article>
+        ))}
+      </div>
+      <p class="services-note">{c.servicesNote}</p>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="section gallery-section" aria-label={c.ui.workGallery}>
+    <div class="container">
+      <div class="gallery" role="region" aria-roledescription="carousel" aria-label={c.ui.galleryRegion}>
+        <div class="gallery-track">
+          {galleryImgs.map((src, i) => (
+            <img src={src} alt={c.galleryAlt[i]} width={galleryDims[i][0]} height={galleryDims[i][1]} loading="lazy" />
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section faq-section" aria-labelledby="faq-heading">
+    <div class="container">
+      <h2 id="faq-heading" class="section-title">{c.ui.faqHeading}</h2>
+      <div class="faq-list">
+        {c.faq.map((f) => (
+          <details class="faq-item">
+            <summary class="faq-question">{f.q}</summary>
+            <div class="faq-answer">
+              <p>{f.a}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Zones -->
+  <section class="section" aria-labelledby="zones-heading">
+    <div class="container">
+      <h2 id="zones-heading" class="section-title">{c.ui.serviceAreaHeading}</h2>
+      <ul class="zones-list" aria-label={c.ui.townsAria}>
+        {c.zones.map((z) => <li>{z}</li>)}
+      </ul>
+      <p class="zones-text">{c.zonesText}</p>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section class="section about" aria-labelledby="about-heading">
+    <div class="container">
+      <h2 id="about-heading" class="section-title">{c.ui.aboutHeading}</h2>
+      <p>{c.about}</p>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="section contact" aria-labelledby="contact-heading">
+    <div class="container">
+      <h2 id="contact-heading" class="section-title">{c.ui.contactHeading}</h2>
+      <div class="btn-group">
+        <a href={`https://wa.me/${whatsapp}?text=${c.ui.contactQuoteText}`} class="btn btn-whatsapp" target="_blank" rel="noopener">
+          <WhatsAppIcon size={20} fill="white" />
+          {c.ui.contactWhatsApp}
+        </a>
+      </div>
+      <p class="contact-phone-info">{c.ui.alsoByPhone} <strong>{c.contact.phone}</strong></p>
+      <p class="contact-hours">🕐 {c.contact.hours}</p>
+      <p class="contact-location">📍 {c.contact.location}</p>
+    </div>
+  </section>
+</main>
+
+<script type="application/ld+json" set:html={JSON.stringify(localBusiness)} is:inline />
+<script type="application/ld+json" set:html={JSON.stringify(faqPage)} is:inline />

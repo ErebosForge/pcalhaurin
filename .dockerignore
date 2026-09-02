@@ -1,0 +1,8 @@
+# Node deps and build output must be produced inside the image.
+site-astro/node_modules/
+site-astro/dist/
+site-astro/.astro/
+
+# Repository metadata is not needed by the build.
+.git/
+.github/

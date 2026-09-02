@@ -12,7 +12,7 @@ GitHub push to main
             → https://pcalhaurin.es
 ```
 
-The application repository owns the Hugo/Caddy image and its Traefik labels. It does not install Traefik, configure `cloudflared`, create the shared `proxy` network, or manage Cloudflare DNS.
+The application repository owns the Astro/Caddy image and its Traefik labels. It does not install Traefik, configure `cloudflared`, create the shared `proxy` network, or manage Cloudflare DNS.
 
 ## Common infrastructure prerequisite
 
@@ -48,4 +48,4 @@ The old application-owned `setup-domains.yml` and `infra/setup-server.sh` have i
 
 ## Local testing
 
-For local development use the Hugo preview or a local compose setup. Production routing and certificates are provided by the shared OCI infrastructure, not by the application compose file.
+For local development use the Astro dev server (`cd site-astro && npm run dev`) or a local compose setup. Production routing and certificates are provided by the shared OCI infrastructure, not by the application compose file.

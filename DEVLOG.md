@@ -2,11 +2,49 @@
 
 > Read this to recover context after a session break.
 
+## 2026-09-02 — Migrated Hugo → Astro
+
+Migrated the site from Hugo to **Astro** (static output) as part of standardising
+the content-site stack on Astro across ErebosForge projects.
+
+**What changed:**
+- New Astro project under `site-astro/` (the old Hugo `site/` is kept during the
+  transition; remove once the Astro build is confirmed in production).
+- All copy centralised in `site-astro/src/data/{es,en}.ts` with a typed schema in
+  `types.ts` (build fails on missing/renamed fields — validation Hugo lacked).
+- Layout/body ported to `BaseLayout.astro` + `Home.astro` + `WhatsAppIcon.astro`.
+- Routes preserved exactly: ES at `/`, EN at `/en/`, legal at `/legal/` and
+  `/en/legal/` (directory-style URLs).
+- SEO preserved: canonical, cross hreflang, OG/Twitter, and the three JSON-LD
+  blocks (WebSite only on ES home; LocalBusiness + FAQPage on both homes).
+- Static assets (CSS, 10 Inter fonts, 6 images, favicon, robots, llms) moved to
+  `site-astro/public/`; `sitemap.xml` now a static file with the 4 URLs.
+- `Dockerfile` updated to multi-stage **node:22-alpine (npm ci + astro build) →
+  caddy:2-alpine** serving `dist/` at `/srv`. `.dockerignore` updated.
+- `docker-compose.yml`, `Caddyfile`, and `deploy.yml` needed **no changes**
+  (same container interface: Caddy on :80, same Traefik labels, same health check).
+
+**Verified:** `npm ci && npm run build` reproduces 4 clean pages. The production
+**Docker image was built and run locally**: public pages (`/`, `/en/`, `/legal/`,
+`/en/legal/`, css, robots, sitemap, images) return 200; docs/source paths
+(`/README.md`, `/DEVLOG.md`, `/docs/*`, `/src/*`, `/Dockerfile`, `/package.json`)
+return 404 — only the built site is served, no docs/source leak. Generated HTML
+checked for lang/canonical/hreflang/JSON-LD and correct counts (6 services, 6 FAQ,
+7 zones, 6 gallery images). Docs (README, docs/deploy.md, docs/spec.md) updated.
+
+**Done:** the old Hugo `site/` has been removed; `.gitignore`, `.dockerignore`,
+`Caddyfile` comments updated to Astro.
+
+**Not done (left to confirm in production):** real `podman build` + deploy on the
+OCI server (only Docker was available locally).
+
+
 ## Project Summary
 
 **PCAlhaurín** — Static landing page for local PC repair services.
 - Domain: pcalhaurin.es (registered, Cloudflare DNS active)
-- Stack: Hugo → Docker (Caddy Alpine) → OCI server → Cloudflare Tunnel
+- Stack: Astro (static) → Docker/Podman (Caddy Alpine) → OCI server → shared Traefik / Cloudflare
+  (migrated from Hugo on 2026-09-02 — see entry below)
 - Languages: ES (primary), EN (expats)
 - Target: 3-4 repairs/month from organic search + Google Business Profile
 - Contact: WhatsApp (+34 614 47 99 22) as primary CTA, phone secondary

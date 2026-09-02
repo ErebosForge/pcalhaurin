@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { es } from '../data/es';
+---
+<BaseLayout
+  content={es}
+  path="/legal/"
+  altPath="/en/legal/"
+  altLang="en"
+  title="Aviso Legal y Política de Privacidad | PCAlhaurín"
+  description="Aviso legal y política de privacidad de PCAlhaurín."
+>
+  <main id="main-content">
+    <section class="section legal-content">
+      <div class="container">
+        <h2>Aviso Legal</h2>
+        <p>Este sitio web es titularidad de un particular que presta servicios de reparación de equipos informáticos en la provincia de Málaga.</p>
+        <ul>
+          <li><strong>Dominio</strong>: pcalhaurin.es</li>
+          <li><strong>Ubicación</strong>: Alhaurín de la Torre, Málaga, España</li>
+          <li><strong>Contacto</strong>: +34 614 47 99 22 (WhatsApp)</li>
+        </ul>
+        <p>Este sitio no recoge datos personales a través de formularios ni cookies. El único medio de contacto es WhatsApp o teléfono, por iniciativa del usuario.</p>
+
+        <h2>Política de Privacidad</h2>
+        <h3>Qué datos trato</h3>
+        <p>Solo los que tú me proporcionas voluntariamente al contactar por WhatsApp o teléfono: tu nombre, número de teléfono, y la descripción del problema con tu equipo.</p>
+        <h3>Para qué los uso</h3>
+        <p>Exclusivamente para atender tu consulta, darte presupuesto y realizar la reparación acordada. No envío publicidad ni comparto tus datos con terceros.</p>
+        <h3>Cuánto tiempo los conservo</h3>
+        <p>Conservo los mensajes de WhatsApp mientras dure la relación de servicio. Puedes pedirme que borre tu conversación en cualquier momento.</p>
+        <h3>Tus derechos</h3>
+        <p>Puedes ejercer tus derechos de acceso, rectificación, supresión y oposición contactándome por WhatsApp o teléfono al +34 614 47 99 22.</p>
+        <h3>Cookies</h3>
+        <p>Este sitio web no usa cookies. No hay rastreo, analítica ni publicidad.</p>
+
+        <h2>Propiedad intelectual</h2>
+        <p>Las fotografías de este sitio son de elaboración propia. Los textos y el diseño son propiedad del titular. Se prohíbe su reproducción sin autorización.</p>
+
+        <hr />
+        <p><em>Última actualización: agosto 2026</em></p>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
