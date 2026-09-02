@@ -33,8 +33,7 @@ Push to `main` to run `.github/workflows/deploy.yml`. The pipeline:
 3. Removes stale PCAlhaurín containers from older Compose release projects.
 4. Starts the new container on the external `proxy` network.
 5. Checks `https://pcalhaurin.es/` through local Traefik using `--resolve`.
-6. Cross-checks `https://acamaster.es/` without modifying it.
-7. Keeps the last three application releases.
+6. Keeps the last three application releases.
 
 ## DNS and Tunnel setup
 

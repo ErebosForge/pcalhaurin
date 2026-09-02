@@ -2,6 +2,11 @@
 
 > Read this to recover context after a session break.
 
+## 2026-09-03 — Deployment workflow cleanup
+
+- Deployment clone authentication now uses the workflow's built-in GitHub token with `contents: read`; missing token propagation fails before cloning.
+- Deployment health validation checks only `https://pcalhaurin.es/` through local Traefik. Unrelated domain checks are not part of the application pipeline because shared infrastructure owns cross-service routing.
+
 ## 2026-09-02 — Migrated Hugo → Astro
 
 Migrated the site from Hugo to **Astro** (static output) as part of standardising

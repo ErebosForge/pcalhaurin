@@ -108,7 +108,7 @@ Push to `main` triggers GitHub Actions (`.github/workflows/deploy.yml`):
 1. Clones the repo on the OCI server at the exact commit.
 2. Docker/Podman multi-stage build: **Node builds the Astro site → Caddy serves `dist/`**.
 3. Container serves internally on port 80 behind the shared Traefik → Cloudflare.
-4. Health-checks `https://pcalhaurin.es/` and cross-checks `acamaster.es`.
+4. Health-checks `https://pcalhaurin.es/` through local Traefik.
 
 See `docs/deploy.md` for full setup instructions and secrets.
 

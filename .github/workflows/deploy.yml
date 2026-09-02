@@ -5,6 +5,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -21,7 +24,8 @@ jobs:
       - name: Deploy
         uses: appleboy/ssh-action@v1
         env:
-          GH_TOKEN: ${{ secrets.CICD_ACCESS_TOKEN }}
+          # The built-in token can read this repository during the workflow.
+          GH_TOKEN: ${{ github.token }}
           GIT_REF: ${{ github.sha }}
         with:
           host: ${{ vars.DEPLOY_HOST }}
@@ -42,9 +46,14 @@ jobs:
               exit 1
             fi
 
+            if [ -z "${GH_TOKEN:-}" ]; then
+              echo "ERROR: GitHub clone token was not provided to the remote deploy script"
+              exit 1
+            fi
+
             # Clone fresh release at the exact commit
             mkdir -p "$BASE/releases"
-            git clone --quiet https://x-access-token:${GH_TOKEN}@github.com/ErebosForge/pcalhaurin.git "$RELEASE"
+            git clone --quiet "https://x-access-token:${GH_TOKEN}@github.com/ErebosForge/pcalhaurin.git" "$RELEASE"
             cd "$RELEASE"
             git checkout --quiet "$GIT_REF"
             echo "Cloned at $(git rev-parse --short HEAD)"
@@ -94,14 +103,6 @@ jobs:
             if [ "$CODE" != "200" ]; then
               echo "❌ pcalhaurin.es FAILED (last code: $CODE)"
               FAILED=1
-            fi
-
-            # Cross-check: acamaster.es should still be responding
-            CODE=$(curl -k -sS -o /dev/null -w '%{http_code}' --resolve "acamaster.es:443:127.0.0.1" "https://acamaster.es/" 2>/dev/null || echo "000")
-            if [ "$CODE" = "200" ]; then
-              echo "✅ acamaster.es → $CODE (cross-check)"
-            else
-              echo "⚠️  acamaster.es → $CODE (cross-check — not our fault but flagging)"
             fi
 
             echo ""
