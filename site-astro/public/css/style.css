@@ -297,10 +297,22 @@ a.nav-brand:hover {
 }
 
 .lang-switch a {
+  align-items: center;
   color: #F8FAFC;
+  display: inline-flex;
   font-weight: 600;
+  gap: var(--space-xs);
   text-decoration: none;
   white-space: nowrap;
+}
+
+.lang-flag {
+  display: inline-block;
+  flex: 0 0 auto;
+  height: 0.75rem;
+  width: 1.125rem;
+  border-radius: 0.125rem;
+  box-shadow: 0 0 0 1px rgba(248, 250, 252, 0.25);
 }
 
 .lang-switch a:hover {
@@ -604,40 +616,73 @@ a.nav-brand:hover {
   bottom: 0;
   background: var(--color-nav);
   color: var(--color-border);
-  padding: var(--space-md) 0;
+  padding: var(--space-sm) 0;
   font-size: var(--text-sm);
+  line-height: 1.35;
   z-index: 90;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-inner {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
+  gap: var(--space-lg);
+  min-height: 2.75rem;
 }
 
-.footer-contact a {
-  color: var(--color-nav-text);
-  font-weight: 600;
-}
-
-.footer-contact a:hover {
-  text-decoration: underline;
-}
-
-.footer-copy {
-  color: var(--color-border);
-}
-
-.footer-legal {
+.footer-legal,
+.footer-brand {
   color: var(--color-border);
   text-decoration: none;
 }
 
-.footer-legal:hover {
+.footer-legal {
+  justify-self: start;
+}
+
+.footer-copy {
+  color: var(--color-border);
+  justify-self: center;
+  text-align: center;
+}
+
+.footer-brand {
+  justify-self: end;
+  text-align: right;
+}
+
+.footer-legal:hover,
+.footer-brand:hover {
   text-decoration: underline;
+}
+
+/* Keep the final CTA clear of the sticky footer while scrolling. */
+main {
+  padding-bottom: var(--space-2xl);
+}
+
+@media (max-width: 720px), (max-height: 650px) {
+  .footer-sticky {
+    position: static;
+  }
+
+  main {
+    padding-bottom: 0;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
+    text-align: center;
+  }
+
+  .footer-legal,
+  .footer-copy,
+  .footer-brand {
+    justify-self: center;
+    text-align: center;
+  }
 }
 
 /* === LEGAL PAGE === */

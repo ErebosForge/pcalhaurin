@@ -232,6 +232,7 @@ export const en: SiteContent = {
     alsoByPhone: 'You can also call us:',
     priceLabel: (p: string) => `Price: ${p}`,
     legalLink: 'Legal',
+    websiteBy: 'A website by ErebosForge',
     footerQuoteText: 'Hi,%20I%20need%20a%20quote',
     heroQuoteText: 'Hi,%20I%20need%20a%20quote%20for%20my%20computer',
     contactQuoteText: 'Hi,%20I%20need%20a%20quote%20for%20my%20computer',

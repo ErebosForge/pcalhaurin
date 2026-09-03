@@ -87,6 +87,7 @@ export interface SiteContent {
     alsoByPhone: string;
     priceLabel: (p: string) => string;
     legalLink: string;
+    websiteBy: string;
     footerQuoteText: string; // wa.me prefilled text (URL-encoded)
     heroQuoteText: string;
     contactQuoteText: string;

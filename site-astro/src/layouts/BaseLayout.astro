@@ -1,6 +1,7 @@
 ---
 import type { SiteContent } from '../data/types';
 import WhatsAppIcon from '../components/WhatsAppIcon.astro';
+import LanguageFlag from '../components/LanguageFlag.astro';
 
 interface Props {
   content: SiteContent;
@@ -20,7 +21,6 @@ const SITE = 'https://pcalhaurin.es';
 const { content, path, altPath, altLang, isEsHome = false, title, description } = Astro.props;
 
 const c = content;
-const phone = c.contact.phone;
 const whatsapp = c.contact.whatsapp;
 
 const pageTitle = title ?? c.title;
@@ -81,7 +81,7 @@ const contactPath = c.lang === 'es' ? '/contacto/' : '/en/contact/';
   <!-- Font: Inter — self-hosted -->
   <link rel="preload" href="/fonts/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin />
   <!-- Bump the version when public/css/style.css changes; static CSS is immutable-cached. -->
-  <link rel="stylesheet" href="/css/style.css?v=83231d5" />
+  <link rel="stylesheet" href="/css/style.css?v=20260903-footer" />
   <link rel="describedby" href="/llms.txt" />
 </head>
 <body>
@@ -94,7 +94,10 @@ const contactPath = c.lang === 'es' ? '/contacto/' : '/en/contact/';
         <a href={homePath} class="nav-brand"><span class="brand-pc">PC</span><span class="brand-alhaurin">Alhaurin</span><span class="brand-tld">.es</span></a>
         <div class="nav-utility">
           <div class="lang-switch">
-            <a href={altPath} hreflang={altLang}>{altLang === 'es' ? '🇪🇸 Español' : '🇬🇧 English'}</a>
+            <a href={altPath} hreflang={altLang}>
+              <LanguageFlag lang={altLang} />
+              <span>{altLang === 'es' ? 'Español' : 'English'}</span>
+            </a>
           </div>
           <a href={`https://wa.me/${whatsapp}?text=${c.ui.navQuoteText}`} class="nav-phone" target="_blank" rel="noopener" aria-label={c.ui.contactWhatsApp}>
             <WhatsAppIcon size={16} />
@@ -121,14 +124,9 @@ const contactPath = c.lang === 'es' ? '/contacto/' : '/en/contact/';
   <!-- Sticky footer with contact info -->
   <footer class="footer-sticky" role="contentinfo">
     <div class="container footer-inner">
-      <span class="footer-contact">
-        <a href={`https://wa.me/${whatsapp}?text=${c.ui.footerQuoteText}`} target="_blank" rel="noopener">💬 WhatsApp</a>
-        · {phone}
-      </span>
-      <span class="footer-copy">
-        © {year} PCAlhaurín ·
-        <a href={legalPath} class="footer-legal">{c.ui.legalLink}</a>
-      </span>
+      <a href={legalPath} class="footer-legal">{c.ui.legalLink}</a>
+      <span class="footer-copy">© {year} PCAlhaurín</span>
+      <a href="https://erebosforge.com" class="footer-brand" target="_blank" rel="noopener">{c.ui.websiteBy}</a>
     </div>
   </footer>
 

@@ -232,6 +232,7 @@ export const es: SiteContent = {
     alsoByPhone: 'También puedes llamarnos:',
     priceLabel: (p: string) => `Precio: ${p}`,
     legalLink: 'Aviso legal',
+    websiteBy: 'Un sitio web de ErebosForge',
     footerQuoteText: 'Hola,%20necesito%20presupuesto',
     heroQuoteText: 'Hola,%20necesito%20presupuesto%20para%20mi%20ordenador',
     contactQuoteText: 'Hola,%20necesito%20presupuesto%20para%20mi%20ordenador',
