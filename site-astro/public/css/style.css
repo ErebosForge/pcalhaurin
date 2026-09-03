@@ -36,7 +36,7 @@
   --space-3xl: 4rem;
 
   /* Layout */
-  --max-width: 960px;
+  --max-width: 1200px;
   --radius: 0.5rem;
   --shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
@@ -438,11 +438,11 @@ a.nav-brand:hover {
 }
 
 .info-page-container {
-  max-width: 820px;
+  max-width: 1200px;
 }
 
 .info-page h1 {
-  max-width: 760px;
+  max-width: 900px;
   margin: 0 auto var(--space-lg);
   text-align: center;
 }
@@ -456,7 +456,12 @@ a.nav-brand:hover {
 }
 
 .info-page-section {
-  margin-top: var(--space-3xl);
+  max-width: 820px;
+  margin: var(--space-3xl) auto 0;
+}
+
+.info-page-section:has(.services-grid) {
+  max-width: none;
 }
 
 .info-page-section h2 {
@@ -504,8 +509,14 @@ a.nav-brand:hover {
 /* === SERVICES === */
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-lg);
+}
+
+@media (min-width: 1200px) {
+  .services-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .service-card {
@@ -610,16 +621,20 @@ a.nav-brand:hover {
   top: var(--space-sm);
 }
 
-/* === FOOTER (sticky at bottom) === */
+/* === FOOTER (natural-flow page shell) === */
+body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
 .footer-sticky {
-  position: sticky;
-  bottom: 0;
+  position: static;
   background: var(--color-nav);
   color: var(--color-border);
   padding: var(--space-sm) 0;
   font-size: var(--text-sm);
   line-height: 1.35;
-  z-index: 90;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -657,20 +672,12 @@ a.nav-brand:hover {
   text-decoration: underline;
 }
 
-/* Keep the final CTA clear of the sticky footer while scrolling. */
+/* Expand the main content on short pages without taking the footer out of flow. */
 main {
-  padding-bottom: var(--space-2xl);
+  flex: 1 0 auto;
 }
 
 @media (max-width: 720px), (max-height: 650px) {
-  .footer-sticky {
-    position: static;
-  }
-
-  main {
-    padding-bottom: 0;
-  }
-
   .footer-inner {
     grid-template-columns: 1fr;
     gap: var(--space-xs);
