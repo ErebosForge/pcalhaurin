@@ -94,12 +94,128 @@ export const en: SiteContent = {
     location: 'Avenida El Limón, Alhaurín de la Torre, Málaga',
     hours: 'Support and collection hours: Monday to Friday, 18:00–21:00, and Saturday mornings.',
   },
+  pages: {
+    services: {
+      metaTitle: 'Computer Repair Services | PCAlhaurín',
+      title: 'Computer repair services in Alhaurín de la Torre',
+      description:
+        'Computer and laptop repair services in Alhaurín de la Torre: Windows, viruses, RAM, SSD, WiFi and diagnostics, with indicative prices and a quote first.',
+      intro:
+        'Computer and laptop repairs for software and hardware problems. These are the most common services, with indicative pricing and a clear explanation before any repair.',
+      sections: [
+        {
+          heading: 'Indicative prices and a quote first',
+          paragraphs: [
+            'Published prices are indicative. We inspect the computer first and confirm the quote before carrying out any repair.',
+          ],
+        },
+        {
+          heading: 'Collection, workshop and home visits',
+          paragraphs: [
+            'Some issues can be resolved at home. When the equipment needs a more complete assessment, we arrange collection and delivery in advance via WhatsApp.',
+          ],
+        },
+      ],
+      cta: 'Request a quote',
+      ctaText: 'Hi,%20I%20need%20a%20quote%20for%20my%20computer',
+    },
+    homeVisits: {
+      metaTitle: 'Computer Repair at Home in Alhaurín | PCAlhaurín',
+      title: 'Computer repair at home in Alhaurín de la Torre',
+      description:
+        'Computer repair at home in Alhaurín de la Torre and nearby towns. WiFi setup, tune-ups and issues that can be resolved on site.',
+      intro:
+        'We provide home visits for issues that can be resolved on site. The visit has a €20 surcharge, and the quote is confirmed before any repair.',
+      sections: [
+        {
+          heading: 'Issues that can be resolved at home',
+          paragraphs: [
+            'Home support is suitable when the computer does not need to be dismantled or assessed in the workshop for an extended period.',
+          ],
+          bullets: [
+            'WiFi, router and extender setup.',
+            'Computer tune-ups and performance issues.',
+            'Program setup and removal of unwanted software.',
+          ],
+        },
+        {
+          heading: 'When equipment is collected',
+          paragraphs: [
+            'When the fault needs a more complete assessment, we arrange collection and delivery in advance via WhatsApp so the equipment can be worked on in the workshop.',
+          ],
+        },
+      ],
+      cta: 'Request a visit or quote',
+      ctaText: 'Hi,%20I%20need%20a%20home%20visit',
+    },
+    howWeWork: {
+      metaTitle: 'How We Work | PCAlhaurín',
+      title: 'How we work',
+      description:
+        'How PCAlhaurín computer repair works: contact, diagnosis, quote first, repair and collection or delivery.',
+      intro:
+        'We use a simple, transparent process so you know the problem, price and repair options before authorising any work.',
+      sections: [
+        {
+          heading: '1. First contact',
+          paragraphs: [
+            'Tell us via WhatsApp what is happening with your computer, laptop or connection. This helps us advise you on the next step.',
+          ],
+        },
+        {
+          heading: '2. Review and diagnosis',
+          paragraphs: [
+            'We inspect the equipment to identify the cause of the problem and distinguish between software, hardware and configuration issues.',
+          ],
+        },
+        {
+          heading: '3. Quote before any repair',
+          paragraphs: [
+            'We explain the fault and confirm the quote before carrying out any repair. No work is done without authorisation.',
+          ],
+        },
+        {
+          heading: '4. Repair and delivery',
+          paragraphs: [
+            'Once the work is authorised, we arrange the repair, collection or delivery and explain the options applied.',
+          ],
+        },
+      ],
+      cta: 'Message us on WhatsApp',
+      ctaText: 'Hi,%20I%20need%20help%20with%20my%20computer',
+    },
+    contact: {
+      metaTitle: 'Contact and Quotes | PCAlhaurín',
+      title: 'Contact and quotes in Alhaurín de la Torre',
+      description:
+        'Contact PCAlhaurín by WhatsApp or phone for a computer repair quote in Alhaurín de la Torre and nearby towns.',
+      intro:
+        'For a quote, an explanation of a fault or to arrange collection, WhatsApp is the quickest option. You can also call during support hours.',
+      sections: [
+        {
+          heading: 'Collection and home visits',
+          paragraphs: [
+            'Collection and delivery are arranged in advance. Home visits are available for issues that can be resolved on site and have a €20 surcharge.',
+          ],
+        },
+        {
+          heading: 'Service area',
+          paragraphs: [
+            'We serve Alhaurín de la Torre, Alhaurín el Grande, Cártama, Estación de Cártama, Campanillas, Churriana and Pizarra.',
+          ],
+        },
+      ],
+      cta: 'Message us on WhatsApp',
+      ctaText: 'Hi,%20I%20need%20a%20quote',
+    },
+  },
   ui: {
     mainNav: 'Main navigation',
     navHome: 'Home',
     navServices: 'Services',
     navHowWeWork: 'How we work',
     navAreas: 'Service areas',
+    navHomeVisits: 'Home visits',
     navContact: 'Contact',
     changeLang: 'Change language',
     langLabel: '🇬🇧 English',

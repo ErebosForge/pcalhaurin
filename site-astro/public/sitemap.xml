@@ -16,6 +16,62 @@
     <xhtml:link rel="alternate" hreflang="en" href="https://pcalhaurin.es/en/"/>
   </url>
   <url>
+    <loc>https://pcalhaurin.es/servicios/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pcalhaurin.es/servicios/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pcalhaurin.es/en/services/"/>
+  </url>
+  <url>
+    <loc>https://pcalhaurin.es/en/services/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pcalhaurin.es/servicios/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pcalhaurin.es/en/services/"/>
+  </url>
+  <url>
+    <loc>https://pcalhaurin.es/a-domicilio/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pcalhaurin.es/a-domicilio/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pcalhaurin.es/en/home-visits/"/>
+  </url>
+  <url>
+    <loc>https://pcalhaurin.es/en/home-visits/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pcalhaurin.es/a-domicilio/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pcalhaurin.es/en/home-visits/"/>
+  </url>
+  <url>
+    <loc>https://pcalhaurin.es/como-trabajamos/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pcalhaurin.es/como-trabajamos/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pcalhaurin.es/en/how-we-work/"/>
+  </url>
+  <url>
+    <loc>https://pcalhaurin.es/en/how-we-work/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pcalhaurin.es/como-trabajamos/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pcalhaurin.es/en/how-we-work/"/>
+  </url>
+  <url>
+    <loc>https://pcalhaurin.es/contacto/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pcalhaurin.es/contacto/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pcalhaurin.es/en/contact/"/>
+  </url>
+  <url>
+    <loc>https://pcalhaurin.es/en/contact/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="es" href="https://pcalhaurin.es/contacto/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://pcalhaurin.es/en/contact/"/>
+  </url>
+  <url>
     <loc>https://pcalhaurin.es/legal/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>

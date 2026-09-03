@@ -1,0 +1,10 @@
+# Local-only preview configuration.
+# This intentionally does not include the production Traefik labels or external
+# `proxy` network from docker-compose.yml.
+services:
+  web:
+    build:
+      context: .
+    image: pcalhaurin-web:local
+    ports:
+      - "127.0.0.1:8080:80"

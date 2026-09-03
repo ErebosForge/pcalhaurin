@@ -31,16 +31,20 @@ npm run build
 npm run preview
 ```
 
-Run the **real production image** locally (same multi-stage build used on the server):
+Run a browser-accessible local preview using the same multi-stage image, without requiring the production Traefik network:
 
 ```bash
 # From the repo root (not site-astro/)
-docker compose up -d --build
-# → http://127.0.0.1  (Caddy serves the built site on port 80)
+docker compose -p pcalhaurin-local -f docker-compose.local.yml up --build -d
+# → http://127.0.0.1:8080  (Caddy serves the built site on the loopback port)
 
-docker compose logs -f      # follow logs
-docker compose down         # stop
+docker compose -p pcalhaurin-local -f docker-compose.local.yml logs -f  # follow logs
+docker compose -p pcalhaurin-local -f docker-compose.local.yml down     # stop and remove
 ```
+
+The root `docker-compose.yml` remains the production-oriented configuration. It
+expects the external `proxy` network and Traefik to provide ingress, so it is not
+the normal local-browser command.
 
 ## Development
 
@@ -49,7 +53,7 @@ docker compose down         # stop
 All site copy is centralised in **two files**, one per language:
 
 ```
-site-astro/src/data/es.ts    — All Spanish text (hero, services, FAQ, zones, about, contact, UI strings)
+site-astro/src/data/es.ts    — All Spanish text (home, supporting pages, services, FAQ, zones, contact, UI strings)
 site-astro/src/data/en.ts    — All English text (same shape)
 site-astro/src/data/types.ts — The content schema. If you add/rename/remove a field,
                                 TypeScript reports it at build time (validation Hugo lacked).
@@ -61,12 +65,15 @@ You do **not** need to touch templates to edit text — only `es.ts` / `en.ts`.
 
 ```
 site-astro/src/layouts/BaseLayout.astro     — HTML shell: <head>, SEO/OG/Twitter, hreflang,
-                                               canonical, nav, sticky footer, floating WhatsApp button
+                                               canonical, two-level nav, sticky footer,
+                                               floating WhatsApp button
 site-astro/src/components/Home.astro         — Home body (hero, services, gallery, FAQ, zones,
                                                about, contact) + LocalBusiness/FAQPage JSON-LD
+site-astro/src/components/InfoPage.astro     — Reusable localized supporting-page body with
+                                               service, zone, process, and contact sections
 site-astro/src/components/WhatsAppIcon.astro — Reusable WhatsApp SVG
-site-astro/src/pages/                        — Routes: index.astro (ES /), en/index.astro (/en/),
-                                               legal.astro (/legal/), en/legal.astro (/en/legal/)
+site-astro/src/pages/                        — Routes: home, services, home visits, process,
+                                               contact, and legal pages in ES/EN
 ```
 
 Styles and static assets (served as-is from `public/`):
@@ -77,8 +84,11 @@ site-astro/public/{img,fonts}/               — Images and self-hosted Inter fo
 site-astro/public/{robots.txt,llms.txt,sitemap.xml,favicon.svg}
 ```
 
-Routing mirrors the previous setup: **ES at the root (`/`), EN under `/en/`**;
-legal pages at `/legal/` and `/en/legal/` (directory-style URLs).
+Routing mirrors the previous setup: **ES at the root and Spanish slugs; EN under `/en/`**.
+The public route pairs are `/` ↔ `/en/`, `/servicios/` ↔ `/en/services/`,
+`/a-domicilio/` ↔ `/en/home-visits/`, `/como-trabajamos/` ↔ `/en/how-we-work/`,
+`/contacto/` ↔ `/en/contact/`, and `/legal/` ↔ `/en/legal/`.
+All pages use directory-style URLs and reciprocal canonical/hreflang metadata.
 
 ### Common tasks
 
@@ -90,8 +100,12 @@ legal pages at `/legal/` and `/en/legal/` (directory-style URLs).
 - **Add an FAQ:** append `{ q, a }` to the `faq` array in both languages. It also
   feeds the `FAQPage` JSON-LD automatically.
 - **Add a coverage zone:** append to the `zones` array in both languages.
-- **Update the sitemap:** `public/sitemap.xml` is a static file (4 URLs). If you
-  add a page, add its `<url>` entry there too.
+- **Edit a supporting page:** update the matching `pages.services`,
+  `pages.homeVisits`, `pages.howWeWork`, or `pages.contact` object in both locale
+  files. The route wrappers and `InfoPage.astro` remain reusable.
+- **Update the sitemap:** `public/sitemap.xml` is a static file containing 12
+  public URLs. If you add a page, add its localized `<url>` entry and reciprocal
+  `xhtml:link` alternates there too.
 
 ### Debugging
 
@@ -132,8 +146,8 @@ pcalhaurin/
 │   ├── src/
 │   │   ├── data/              ← es.ts / en.ts (all copy) + types.ts (schema)
 │   │   ├── layouts/           ← BaseLayout.astro
-│   │   ├── components/        ← Home.astro, WhatsAppIcon.astro
-│   │   └── pages/             ← index, en/index, legal, en/legal
+│   │   ├── components/        ← Home.astro, InfoPage.astro, WhatsAppIcon.astro
+│   │   └── pages/             ← home, services, home visits, process, contact, legal (ES/EN)
 │   └── public/                ← css, img, fonts, robots, llms, sitemap, favicon
 └── .gitignore
 ```

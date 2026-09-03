@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import InfoPage from '../../components/InfoPage.astro';
+import { en } from '../../data/en';
+
+const page = en.pages.homeVisits;
+---
+<BaseLayout
+  content={en}
+  path="/en/home-visits/"
+  altPath="/a-domicilio/"
+  altLang="es"
+  title={page.metaTitle}
+  description={page.description}
+>
+  <InfoPage content={en} page={page} canonical="https://pcalhaurin.es/en/home-visits/" showZones={true} />
+</BaseLayout>

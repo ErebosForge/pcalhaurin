@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InfoPage from '../components/InfoPage.astro';
+import { es } from '../data/es';
+
+const page = es.pages.howWeWork;
+---
+<BaseLayout
+  content={es}
+  path="/como-trabajamos/"
+  altPath="/en/how-we-work/"
+  altLang="en"
+  title={page.metaTitle}
+  description={page.description}
+>
+  <InfoPage content={es} page={page} canonical="https://pcalhaurin.es/como-trabajamos/" />
+</BaseLayout>

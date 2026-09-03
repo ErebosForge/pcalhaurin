@@ -22,5 +22,13 @@ PCAlhaurín es un servicio local de reparación de ordenadores que cubre Alhaur�
 
 - [Inicio (español)](https://pcalhaurin.es/): Página principal con servicios, precios, zona de cobertura y contacto
 - [Home (English)](https://pcalhaurin.es/en/): Main page in English for expats
+- [Servicios de reparación](https://pcalhaurin.es/servicios/): Servicios, precios orientativos y opciones de recogida, taller y visitas a domicilio
+- [Computer repair services (English)](https://pcalhaurin.es/en/services/): Services, indicative prices and workshop or home-visit options
+- [Informático a domicilio](https://pcalhaurin.es/a-domicilio/): Visitas a domicilio en Alhaurín de la Torre y localidades cercanas
+- [Computer repair at home (English)](https://pcalhaurin.es/en/home-visits/): Home visits in Alhaurín de la Torre and nearby towns
+- [Cómo trabajamos](https://pcalhaurin.es/como-trabajamos/): Contacto, diagnóstico, presupuesto previo, reparación y entrega
+- [How we work (English)](https://pcalhaurin.es/en/how-we-work/): Contact, diagnosis, quote first, repair and delivery
+- [Contacto y presupuesto](https://pcalhaurin.es/contacto/): Contacto por WhatsApp o teléfono para solicitar presupuesto
+- [Contact and quotes (English)](https://pcalhaurin.es/en/contact/): Contact details for computer repair quotes
 - [Aviso legal](https://pcalhaurin.es/legal/): Aviso legal y política de privacidad
 - [Legal (English)](https://pcalhaurin.es/en/legal/): Legal notice and privacy policy in English

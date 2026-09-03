@@ -1,0 +1,105 @@
+---
+import type { InfoPageContent, SiteContent } from '../data/types';
+import WhatsAppIcon from './WhatsAppIcon.astro';
+
+interface Props {
+  content: SiteContent;
+  page: InfoPageContent;
+  canonical: string;
+  showServices?: boolean;
+  showZones?: boolean;
+  showContact?: boolean;
+}
+
+const {
+  content: c,
+  page,
+  canonical,
+  showServices = false,
+  showZones = false,
+  showContact = false,
+} = Astro.props;
+const whatsapp = c.contact.whatsapp;
+const phoneHref = c.contact.phone.replace(/[^\d+]/g, '');
+
+const pageJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${canonical}#webpage`,
+  name: page.title,
+  description: page.description,
+  url: canonical,
+  inLanguage: c.lang,
+  isPartOf: { '@type': 'WebSite', name: 'PCAlhaurín', url: 'https://pcalhaurin.es/' },
+};
+---
+<main id="main-content">
+  <section class="section info-page" aria-labelledby="info-page-heading">
+    <div class="container info-page-container">
+      <h1 id="info-page-heading">{page.title}</h1>
+      <p class="info-intro">{page.intro}</p>
+
+      {showServices && (
+        <section class="info-page-section" aria-labelledby="info-services-heading">
+          <h2 id="info-services-heading">{c.ui.servicesHeading}</h2>
+          <div class="services-grid">
+            {c.services.map((service) => (
+              <article class="service-card">
+                <h3>{service.title}</h3>
+                <p>{service.desc}</p>
+                <span class="service-price" aria-label={c.ui.priceLabel(service.price)}>{service.price}</span>
+              </article>
+            ))}
+          </div>
+          <p class="services-note">{c.servicesNote}</p>
+        </section>
+      )}
+
+      {showZones && (
+        <section class="info-page-section" aria-labelledby="info-zones-heading">
+          <h2 id="info-zones-heading">{c.ui.serviceAreaHeading}</h2>
+          <ul class="zones-list" aria-label={c.ui.townsAria}>
+            {c.zones.map((zone) => <li>{zone}</li>)}
+          </ul>
+          <p class="zones-text">{c.zonesText}</p>
+        </section>
+      )}
+
+      {page.sections.map((section, index) => (
+        <section class="info-page-section" aria-labelledby={`info-section-${index}`}>
+          <h2 id={`info-section-${index}`}>{section.heading}</h2>
+          {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+          {section.bullets && (
+            <ul class="info-list">
+              {section.bullets.map((bullet) => <li>{bullet}</li>)}
+            </ul>
+          )}
+        </section>
+      ))}
+
+      {showContact && (
+        <section class="info-page-section info-contact" aria-labelledby="info-contact-heading">
+          <h2 id="info-contact-heading">{c.ui.contactHeading}</h2>
+          <p>
+            <a href={`https://wa.me/${whatsapp}?text=${page.ctaText}`} class="btn btn-whatsapp" target="_blank" rel="noopener">
+              <WhatsAppIcon size={20} fill="white" />
+              {c.ui.contactWhatsApp}
+            </a>
+          </p>
+          <p><strong>{c.ui.alsoByPhone}</strong> <a href={`tel:${phoneHref}`}>{c.contact.phone}</a></p>
+          <p>🕐 {c.contact.hours}</p>
+          <p>📍 {c.contact.location}</p>
+        </section>
+      )}
+
+      <div class="info-cta">
+        <a href={`https://wa.me/${whatsapp}?text=${page.ctaText}`} class="btn btn-whatsapp" target="_blank" rel="noopener">
+          <WhatsAppIcon size={20} fill="white" />
+          {page.cta}
+        </a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script type="application/ld+json" set:html={JSON.stringify(pageJsonLd)} is:inline />

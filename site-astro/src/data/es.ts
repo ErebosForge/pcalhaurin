@@ -94,12 +94,128 @@ export const es: SiteContent = {
     location: 'Avenida El Limón, Alhaurín de la Torre, Málaga',
     hours: 'Horario de atención y recogida: lunes a viernes, de 18:00 a 21:00, y los sábados por la mañana.',
   },
+  pages: {
+    services: {
+      metaTitle: 'Servicios de reparación de ordenadores | PCAlhaurín',
+      title: 'Servicios de reparación de ordenadores en Alhaurín de la Torre',
+      description:
+        'Servicios de reparación de ordenadores y portátiles en Alhaurín de la Torre: Windows, virus, RAM, SSD, WiFi y diagnóstico, con precios orientativos y presupuesto previo.',
+      intro:
+        'Reparación de ordenadores y portátiles con problemas de software y hardware. Estos son los servicios más habituales, con precios orientativos y una explicación clara antes de cualquier reparación.',
+      sections: [
+        {
+          heading: 'Presupuesto previo y precios orientativos',
+          paragraphs: [
+            'Los precios publicados son orientativos. Primero revisamos el equipo y confirmamos el presupuesto antes de realizar la reparación.',
+          ],
+        },
+        {
+          heading: 'Recogida, taller y visitas a domicilio',
+          paragraphs: [
+            'Algunas incidencias se pueden resolver en el domicilio. Cuando el equipo necesita una revisión más completa, coordinamos la recogida y la entrega previamente por WhatsApp.',
+          ],
+        },
+      ],
+      cta: 'Solicitar presupuesto',
+      ctaText: 'Hola,%20necesito%20presupuesto%20para%20mi%20ordenador',
+    },
+    homeVisits: {
+      metaTitle: 'Informático a domicilio en Alhaurín | PCAlhaurín',
+      title: 'Informático a domicilio en Alhaurín de la Torre',
+      description:
+        'Servicio informático a domicilio en Alhaurín de la Torre y localidades cercanas. Configuración de WiFi, puesta a punto y resolución de incidencias que pueden solucionarse en el lugar.',
+      intro:
+        'Realizamos visitas a domicilio para incidencias que pueden resolverse en el lugar. El desplazamiento tiene un suplemento de 20 € y se confirma el presupuesto antes de cualquier reparación.',
+      sections: [
+        {
+          heading: 'Incidencias que pueden resolverse a domicilio',
+          paragraphs: [
+            'La atención a domicilio es adecuada cuando no es necesario desmontar el equipo o hacer una revisión prolongada en el taller.',
+          ],
+          bullets: [
+            'Configuración de WiFi, routers y repetidores.',
+            'Puesta a punto y problemas de rendimiento.',
+            'Configuración de programas y eliminación de software no deseado.',
+          ],
+        },
+        {
+          heading: 'Cuándo se recoge el equipo',
+          paragraphs: [
+            'Cuando la avería requiere una revisión más completa, coordinamos la recogida y la entrega previamente por WhatsApp para trabajar en el taller.',
+          ],
+        },
+      ],
+      cta: 'Solicitar visita o presupuesto',
+      ctaText: 'Hola,%20necesito%20una%20visita%20a%20domicilio',
+    },
+    howWeWork: {
+      metaTitle: 'Cómo trabajamos | PCAlhaurín',
+      title: 'Cómo trabajamos',
+      description:
+        'Así funciona el servicio de reparación de ordenadores de PCAlhaurín: contacto, diagnóstico, presupuesto previo, reparación y entrega.',
+      intro:
+        'Trabajamos con un proceso sencillo y transparente para que conozcas la avería, el precio y las opciones antes de autorizar cualquier reparación.',
+      sections: [
+        {
+          heading: '1. Primer contacto',
+          paragraphs: [
+            'Cuéntanos por WhatsApp qué le ocurre al ordenador, portátil o conexión. Con esa información podemos orientarte sobre los siguientes pasos.',
+          ],
+        },
+        {
+          heading: '2. Revisión y diagnóstico',
+          paragraphs: [
+            'Revisamos el equipo para identificar la causa del problema y distinguir entre una incidencia de software, hardware o configuración.',
+          ],
+        },
+        {
+          heading: '3. Presupuesto previo',
+          paragraphs: [
+            'Explicamos la avería y confirmamos el presupuesto antes de realizar cualquier reparación. No se hace ningún trabajo sin autorización.',
+          ],
+        },
+        {
+          heading: '4. Reparación y entrega',
+          paragraphs: [
+            'Una vez autorizado el trabajo, coordinamos la reparación, la recogida o la entrega del equipo y explicamos las opciones aplicadas.',
+          ],
+        },
+      ],
+      cta: 'Hablar por WhatsApp',
+      ctaText: 'Hola,%20necesito%20ayuda%20con%20mi%20ordenador',
+    },
+    contact: {
+      metaTitle: 'Contacto y presupuesto | PCAlhaurín',
+      title: 'Contacto y presupuesto en Alhaurín de la Torre',
+      description:
+        'Contacta con PCAlhaurín por WhatsApp o teléfono para solicitar presupuesto de reparación de ordenadores en Alhaurín de la Torre y alrededores.',
+      intro:
+        'Para pedir presupuesto, explicar una avería o coordinar una recogida, el medio más rápido es WhatsApp. También puedes llamar por teléfono durante el horario de atención.',
+      sections: [
+        {
+          heading: 'Recogida y visitas a domicilio',
+          paragraphs: [
+            'La recogida y la entrega se coordinan previamente. Las visitas a domicilio están disponibles para incidencias que puedan resolverse en el lugar y tienen un suplemento de 20 €.',
+          ],
+        },
+        {
+          heading: 'Zona de servicio',
+          paragraphs: [
+            'Atendemos Alhaurín de la Torre, Alhaurín el Grande, Cártama, Estación de Cártama, Campanillas, Churriana y Pizarra.',
+          ],
+        },
+      ],
+      cta: 'Escríbenos por WhatsApp',
+      ctaText: 'Hola,%20necesito%20presupuesto',
+    },
+  },
   ui: {
     mainNav: 'Navegación principal',
     navHome: 'Inicio',
     navServices: 'Servicios',
     navHowWeWork: 'Cómo trabajamos',
     navAreas: 'Zonas',
+    navHomeVisits: 'A domicilio',
     navContact: 'Contacto',
     changeLang: 'Cambiar idioma',
     langLabel: '🇪🇸 Español',

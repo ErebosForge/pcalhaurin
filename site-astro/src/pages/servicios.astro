@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import InfoPage from '../components/InfoPage.astro';
+import { es } from '../data/es';
+
+const page = es.pages.services;
+---
+<BaseLayout
+  content={es}
+  path="/servicios/"
+  altPath="/en/services/"
+  altLang="en"
+  title={page.metaTitle}
+  description={page.description}
+>
+  <InfoPage content={es} page={page} canonical="https://pcalhaurin.es/servicios/" showServices={true} />
+</BaseLayout>

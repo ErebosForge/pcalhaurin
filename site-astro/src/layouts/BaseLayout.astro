@@ -32,6 +32,10 @@ const ogImage = SITE + '/img/01-cpu-amd.jpg';
 const year = new Date().getFullYear();
 const legalPath = c.lang === 'es' ? '/legal/' : '/en/legal/';
 const homePath = c.lang === 'es' ? '/' : '/en/';
+const servicesPath = c.lang === 'es' ? '/servicios/' : '/en/services/';
+const homeVisitsPath = c.lang === 'es' ? '/a-domicilio/' : '/en/home-visits/';
+const howWeWorkPath = c.lang === 'es' ? '/como-trabajamos/' : '/en/how-we-work/';
+const contactPath = c.lang === 'es' ? '/contacto/' : '/en/contact/';
 ---
 <!DOCTYPE html>
 <html lang={c.lang}>
@@ -84,24 +88,28 @@ const homePath = c.lang === 'es' ? '/' : '/en/';
 
   <!-- Primary navigation -->
   <header class="site-header">
-    <nav class="nav" aria-label={c.ui.mainNav}>
-      <div class="container">
+    <div class="nav-top">
+      <div class="container nav-top-inner">
         <a href={homePath} class="nav-brand"><span class="brand-pc">PC</span><span class="brand-alhaurin">Alhaurin</span><span class="brand-tld">.es</span></a>
-        <div class="nav-links">
-          <a href={homePath} aria-current={path === homePath ? 'page' : undefined}>{c.ui.navHome}</a>
-          <a href={`${homePath}#services`}>{c.ui.navServices}</a>
-          <a href={`${homePath}#how-we-work`}>{c.ui.navHowWeWork}</a>
-          <a href={`${homePath}#zones`}>{c.ui.navAreas}</a>
-          <a href={`${homePath}#contact`}>{c.ui.navContact}</a>
-        </div>
-        <div class="nav-right">
+        <div class="nav-utility">
           <div class="lang-switch">
             <a href={altPath} hreflang={altLang}>{altLang === 'es' ? '🇪🇸 Español' : '🇬🇧 English'}</a>
           </div>
-          <a href={`https://wa.me/${whatsapp}?text=${c.ui.navQuoteText}`} class="nav-phone" target="_blank" rel="noopener">
+          <a href={`https://wa.me/${whatsapp}?text=${c.ui.navQuoteText}`} class="nav-phone" target="_blank" rel="noopener" aria-label={c.ui.contactWhatsApp}>
             <WhatsAppIcon size={16} />
-            WhatsApp
+            <span class="nav-phone-label">WhatsApp</span>
           </a>
+        </div>
+      </div>
+    </div>
+    <nav class="nav-menu" aria-label={c.ui.mainNav}>
+      <div class="container">
+        <div class="nav-links">
+          <a href={homePath} aria-current={path === homePath ? 'page' : undefined}>{c.ui.navHome}</a>
+          <a href={servicesPath} aria-current={path === servicesPath ? 'page' : undefined}>{c.ui.navServices}</a>
+          <a href={homeVisitsPath} aria-current={path === homeVisitsPath ? 'page' : undefined}>{c.ui.navHomeVisits}</a>
+          <a href={howWeWorkPath} aria-current={path === howWeWorkPath ? 'page' : undefined}>{c.ui.navHowWeWork}</a>
+          <a href={contactPath} aria-current={path === contactPath ? 'page' : undefined}>{c.ui.navContact}</a>
         </div>
       </div>
     </nav>

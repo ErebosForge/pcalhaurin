@@ -12,6 +12,22 @@ export interface Faq {
   a: string;
 }
 
+export interface InfoPageSection {
+  heading: string;
+  paragraphs: string[];
+  bullets?: string[];
+}
+
+export interface InfoPageContent {
+  metaTitle: string;
+  title: string;
+  description: string;
+  intro: string;
+  sections: InfoPageSection[];
+  cta: string;
+  ctaText: string;
+}
+
 export interface Contact {
   phone: string;
   whatsapp: string;
@@ -39,6 +55,12 @@ export interface SiteContent {
   zones: string[];
   zonesText: string;
   about: string;
+  pages: {
+    services: InfoPageContent;
+    homeVisits: InfoPageContent;
+    howWeWork: InfoPageContent;
+    contact: InfoPageContent;
+  };
   faq: Faq[];
   contact: Contact;
   /** UI strings that were inline conditionals in the Hugo template */
@@ -48,6 +70,7 @@ export interface SiteContent {
     navServices: string;
     navHowWeWork: string;
     navAreas: string;
+    navHomeVisits: string;
     navContact: string;
     changeLang: string;
     langLabel: string;
