@@ -80,7 +80,8 @@ const contactPath = c.lang === 'es' ? '/contacto/' : '/en/contact/';
   <meta name="twitter:image" content={ogImage} />
   <!-- Font: Inter — self-hosted -->
   <link rel="preload" href="/fonts/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="/css/style.css" />
+  <!-- Bump the version when public/css/style.css changes; static CSS is immutable-cached. -->
+  <link rel="stylesheet" href="/css/style.css?v=83231d5" />
   <link rel="describedby" href="/llms.txt" />
 </head>
 <body>
