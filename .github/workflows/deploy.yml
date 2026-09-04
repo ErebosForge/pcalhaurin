@@ -80,14 +80,15 @@ jobs:
               fi
             done
 
-            # Swap symlink and start new
+            # Swap symlink; the container is started BY the systemd unit below,
+            # so systemd owns it and its state stays coherent (active).
             ln -sfn "$RELEASE" "$CURRENT"
-            cd "$RELEASE"
-            COMPOSE_PROJECT_NAME=prod-pcalhaurin podman-compose up -d
 
             # === Boot persistence: rootless systemd --user unit ===
-            # Ensures containers come back after an OCI reboot (unless-stopped is
-            # NOT enough for rootless Podman without a user service + linger).
+            # unless-stopped is NOT enough for rootless Podman across reboots.
+            # The unit runs `podman-compose up -d`; starting the container through
+            # it guarantees the unit exists, is enabled and active, and that
+            # systemd owns the container (stop/restart work as expected).
             mkdir -p "$HOME/.config/systemd/user"
             install -m 0644 "$RELEASE/deploy/prod-pcalhaurin.service" \
               "$HOME/.config/systemd/user/prod-pcalhaurin.service"
@@ -98,6 +99,8 @@ jobs:
             systemctl --user enable --now podman.socket >/dev/null 2>&1 || true
             systemctl --user daemon-reload
             systemctl --user enable prod-pcalhaurin.service >/dev/null 2>&1 || true
+            systemctl --user restart prod-pcalhaurin.service
+            systemctl --user is-active --quiet prod-pcalhaurin.service
 
             # === Health checks ===
             echo ""
