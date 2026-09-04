@@ -59,14 +59,14 @@ jobs:
             echo "Cloned at $(git rev-parse --short HEAD)"
 
             # Build BEFORE stopping old (minimise downtime)
-            COMPOSE_PROJECT_NAME=pcalhaurin podman-compose build --no-cache
+            COMPOSE_PROJECT_NAME=prod-pcalhaurin podman-compose build --no-cache
 
             # Stop old if symlink exists
             if [ -L "$CURRENT" ]; then
               OLD_RELEASE=$(readlink -f "$CURRENT")
               if [ -f "$OLD_RELEASE/docker-compose.yml" ]; then
                 cd "$OLD_RELEASE"
-                podman-compose down 2>&1 || true
+                COMPOSE_PROJECT_NAME=prod-pcalhaurin podman-compose down 2>&1 || true
               fi
             fi
 
@@ -83,7 +83,21 @@ jobs:
             # Swap symlink and start new
             ln -sfn "$RELEASE" "$CURRENT"
             cd "$RELEASE"
-            COMPOSE_PROJECT_NAME=pcalhaurin podman-compose up -d
+            COMPOSE_PROJECT_NAME=prod-pcalhaurin podman-compose up -d
+
+            # === Boot persistence: rootless systemd --user unit ===
+            # Ensures containers come back after an OCI reboot (unless-stopped is
+            # NOT enough for rootless Podman without a user service + linger).
+            mkdir -p "$HOME/.config/systemd/user"
+            install -m 0644 "$RELEASE/deploy/prod-pcalhaurin.service" \
+              "$HOME/.config/systemd/user/prod-pcalhaurin.service"
+            if command -v loginctl >/dev/null 2>&1; then
+              [ "$(loginctl show-user "$(id -un)" -p Linger --value 2>/dev/null || echo no)" = yes ] \
+                || sudo -n loginctl enable-linger "$(id -un)" || true
+            fi
+            systemctl --user enable --now podman.socket >/dev/null 2>&1 || true
+            systemctl --user daemon-reload
+            systemctl --user enable prod-pcalhaurin.service >/dev/null 2>&1 || true
 
             # === Health checks ===
             echo ""

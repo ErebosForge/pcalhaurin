@@ -31,9 +31,21 @@ Push to `main` to run `.github/workflows/deploy.yml`. The pipeline:
 1. Builds the container before stopping the previous release.
 2. Stops the previous PCAlhaurín release.
 3. Removes stale PCAlhaurín containers from older Compose release projects.
-4. Starts the new container on the external `proxy` network.
-5. Checks `https://pcalhaurin.es/` through local Traefik using `--resolve`.
-6. Keeps the last three application releases.
+4. Starts the new container on the external `proxy` network
+   (`COMPOSE_PROJECT_NAME=prod-pcalhaurin`).
+5. Installs a rootless systemd `--user` unit (`prod-pcalhaurin.service`, from
+   `deploy/`) and ensures `linger`, so the container survives an OCI reboot.
+   `restart: unless-stopped` alone is not enough for rootless Podman.
+6. Checks `https://pcalhaurin.es/` through local Traefik using `--resolve`.
+7. Keeps the last three application releases.
+
+## Traefik labels
+
+This app owns its Traefik router/service labels (see `docker-compose.yml`),
+including a `www.pcalhaurin.es` → apex redirect that uses the shared generic
+middleware `www-to-apex@file` provided by `common-infrastructure`. Service and
+container naming follow the `<env>-<app>` convention documented in
+common-infrastructure `docs/container-persistence.md`.
 
 ## DNS and Tunnel setup
 
