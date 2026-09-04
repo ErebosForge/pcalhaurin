@@ -14,7 +14,7 @@ services:
       - "traefik.http.routers.pcalhaurin-www.rule=Host(`www.pcalhaurin.es`)"
       - "traefik.http.routers.pcalhaurin-www.entrypoints=websecure"
       - "traefik.http.routers.pcalhaurin-www.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.pcalhaurin-www.middlewares=www-to-nonwww-pcalhaurin@file"
+      - "traefik.http.routers.pcalhaurin-www.middlewares=www-to-apex@file"
       - "traefik.http.routers.pcalhaurin-www.service=pcalhaurin"
     networks:
       - proxy
